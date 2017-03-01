@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>testtest</title>
+  </head>
+  <body>
+    <h2>Testing</h2>
+    <h4>Categories</h4>
+    {%for category in categories%}
+      <p>{{category.name}}</p>
+      <p>{{category.products.count}}</p>
+    {%endfor%}
+    <h4>Products</h4>
+    {%for product in products.all%}
+      <p>Name: {{product.name}}</p>
+      <p>-categories-</p>
+      <p>{{product.product_categories.name}}</p>
+      {%for cat in product__product_categories%}
+        <p>{{cat.name}}</p>
+      {%endfor%}
+    {%endfor%}
+  </body>
+</html>
