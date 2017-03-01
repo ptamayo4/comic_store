@@ -17,4 +17,5 @@ urlpatterns = [
     url(r'^product/category/(?P<category_id>\d+)$',views.product_category),
     url(r'^product_spotlight/(?P<product_id>\d+)$', views.product_spotlight),
     url(r'^shopping_cart$', views.shopping_cart),
+    url(r'product_adder$', views.product_adder)
 ]
