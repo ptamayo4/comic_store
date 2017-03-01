@@ -11,4 +11,5 @@ urlpatterns = [
     url(r'^products_main$', views.products_main),
     url(r'^product_spotlight/(?P<product_id>\d+)$', views.product_spotlight),
     url(r'^shopping_cart$', views.shopping_cart),
+    url(r'product_adder$', views.product_adder)
 ]

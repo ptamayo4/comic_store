@@ -76,3 +76,15 @@ def product_spotlight(request):
 
 def shopping_cart(request):
     return render(request, 'comics/shopping_cart.html')
+
+def product_adder(request):
+    if request.method=="POST":
+        product = Product.productManager.validate_product(request.POST)
+        if 'errors' in product:
+            for error in product['errors']:
+                messages.error(request, error)
+                return redirect('/product_adder')
+        if 'the_product' in product:
+            messages.success(request, "Successfully added product!")
+            return redirect('/dashboard/products')
+    return redirect('/dashboard/products')
