@@ -4,9 +4,22 @@
     <meta charset="utf-8">
     <title>Products Main Page</title>
     {% load staticfiles %}
-    <link rel="stylesheet" href="{% static 'comics/css/style.css' %}"media="screen" title="no title"  charset="utf-8">
+    <link rel="stylesheet" href="{% static '/comics/css/style.css' %}"media="screen" title="no title"  charset="utf-8">
+    <script src="https://code.jquery.com/jquery-2.1.3.js"></script>
+    <script>
+      $(document).ready(function(){
+        $("#temp_logo").click(function(){
+          $("#temp_logo").fadeOut("slow");
+          $("#temp_door_1_1").hide("slide", { direction: "left" }, 1000);
+          $("#temp_door_1_2").show('slide', {direction: 'right'}, "slow");
+          $("#temp_door_2_1").slide("fast");
+          $("#temp_door_2_2").slide("fast");
+          $("#temp_door_2_3").slide("fast");
+        });
+      });
+    </script>
   </head>
-  <body>
+  <body id="bg" style="background-image: url('{% static '/comics/images/backgrounds/temp_blue_background_web.png' %}')";>
     {%include 'includes/nav.html'%}
     <div id="products_console_1">
       {% csrf_token %}
@@ -14,8 +27,9 @@
         <input type="text" name="" value="" placeholder="Product Name">
         <button type="search" name="Search">Search</button>
       </form>
-      <h2>Categories</h2>
+      <h2 id="category_list_title">Categories</h2>
       <ul id="categories">
+        
         {%for category in categories%}
           <li><a href='/product/category/{{category.id}}'>{{category.name}} ( {{category.products.count}} )</a></li>
         {%endfor%}
@@ -28,10 +42,15 @@
     </div>
     <div id="products_console_2">
       <h1>Products {{ page_number }}</h1>
-      <a class="products_gallery_navigation_links" href="#">first</a>
-      <a class="products_gallery_navigation_links" href="#">prev</a>
-      <p id="page_number_sig">{{ page_number }}</p>
-      <a class="products_gallery_navigation_links" href="#">next</a>
+      <div id="products_gallery_navigation">
+        <a class="products_gallery_navigation_links" href="#">first</a>
+        <p class="link_divider">|</p>
+        <a class="products_gallery_navigation_links" href="#">prev</a>
+        <p class="link_divider">|</p>
+        <p id="page_number_sig">Page Number:#{{ page_number }}</p>
+        <p class="link_divider">|</p>
+        <a class="products_gallery_navigation_links" href="#">next</a>
+      </div>
       <form id="product_navigation" action="#" method="post">
         {% csrf_token %}
         Sorted by: <select id="product_selection_drop_down" name="">
@@ -40,17 +59,20 @@
         </select>
       </form>
       <div id="product_gallery">
-        {%for product in products%}
+        <div class="product_gallery_item">
+          <div class="product_image_holder">
+              <img src="{% static 'comics/images/guardians1.jpg' %}" alt="product image">
+        <!-- {%for product in products%} -->
         <a href="/product_spotlight/{{product.id}}">
           <div class="product_gallery_item">
             <div class="product_image_holder">
                 <img class="product-image" src="{%static 'comics/images/guardians1.jpg'%}" alt="{{product.name}} comic picture">
             </div>
-            <p class="product_price">{{product.price}}</p>
-            <p class="product_name">{{product.name}}</p>
+            <p class="product_price">Price{{product.price}}</p>
+            <p class="product_name">Name{{product.name}}</p>
           </div>
         </a>
-        {%endfor%}
+        <!-- {%endfor%} -->
       </div>
       <!-- <div id="product_gallery">
         {% for product in products %}
@@ -65,6 +87,21 @@
         </a>
         {% endfor %}
       </div> -->
-    </div>
+    <!-- </div> -->
+    <!-- <div id="store_entry">
+      <img id="temp_logo" src="{% static 'comics/images/logo_stuff/temp_title_text_image_web.png' %}" alt="Store Temp Logo">
+      <div id="door_entry_1">
+        <img id="temp_door_1_1" src="{% static 'comics/images/doors/Project_landing_page_door1_1_web.png' %}" alt="Store Temp Door 1 prt 1">
+        <img id="temp_door_1_2" src="{% static 'comics/images/doors/Project_landing_page_door1_2_web.png' %}" alt="Store Temp Door 1 prt 2">
+      </div> -->
+      <!-- <div id="door_entry_2">
+        <img id="temp_door_2_1" src="{% static 'comics/images/doors/Project_landing_page_door2_1_web.png' %}" alt="Store Temp Door 2 prt 1">
+        <img id="temp_door_2_2" src="{% static 'comics/images/doors/Project_landing_page_door2_2_web.png' %}" alt="Store Temp Door 2 prt 2">
+        <img id="temp_door_2_3" src="{% static 'comics/images/doors/Project_landing_page_door2_3_web.png' %}" alt="Store Temp Door 2 prt 3">
+      </div> -->
+    <!-- </div> -->
+    <!-- <div id="cover">
+      <img src="{% static 'comics/images/backgrounds/temp_blue_background_2_web.png' %}" alt="Sliding Cover">
+    </div> -->
   </body>
 </html>
