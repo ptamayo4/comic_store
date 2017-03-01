@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="{% static 'comics/css/style.css' %}"media="screen" title="no title"  charset="utf-8">
   </head>
   <body>
+    {%include 'includes/nav.html'%}
     <div id="products_console_1">
       {% csrf_token %}
       <form id="product_search" action="/search_product" method="post">
@@ -14,11 +15,14 @@
         <button type="search" name="Search">Search</button>
       </form>
       <h2>Categories</h2>
-      <ul>
-        <li>Comics {{ comics_inventory }}</li>
+      <ul id="categories">
+        {%for category in categories%}
+          <li>{{category.name}}</li>
+        {%endfor%}
+        <!-- <li>Comics {{ comics_inventory }}</li>
         <li>Graphic Novels {{ graphic_novels_inventory }}</li>
         <li>Tabletop Games {{ tabletop_inventory }}</li>
-        <li>Miniatures {{ miniatures_inventory }}</li>
+        <li>Miniatures {{ miniatures_inventory }}</li> -->
       </ul>
       <a id="show_all_products_link" href="#">Show All</a>
     </div>

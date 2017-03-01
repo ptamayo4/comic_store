@@ -66,9 +66,12 @@ def orders_view(request):
     return render(request, 'comics/admin_orders.html')
 
 def products_main(request):
+    if 'cart' not in request.session:
+        request.session['cart'] = []
     context = {
-        'products' : Product.objects.all()
-    }
+        'products' : Product.objects.all(),
+        'categories' : Category.objects.all(),
+     }
     return render(request, 'comics/products_main.html', context)
 
 def product_spotlight(request):
