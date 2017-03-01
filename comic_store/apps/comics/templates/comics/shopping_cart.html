@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Shopping Cart Page</title>
+    {% load staticfiles %}
+    <link rel="stylesheet" href="{% static 'comics/css/style.css' %}"media="screen" title="no title"  charset="utf-8">
+  </head>
+  <body>
+    <div id="shopping_cart_container">
+      <table id="shopping_cart_display">
+        <thead>
+          <th>Item</th>
+          <th>Price</th>
+          <th>Quantity</th>
+          <th>Total</th>
+        </thead>
+        {% for item in shopping_cart_items %}
+          <tr>
+            <td>{{ product_name }}</td>
+            <td>{{ product_price }}</td>
+            <td>{{ product_selected_quantity }}</td>
+            <td>{{ total_cost }}</td>
+          </tr>
+          {% endfor %}
+      </table>
+    </div>
+    <div id="shopping_cart_table_footer">
+      <p id="cart_total">Cart Total: {{ shopping_cart_total }}</p>
+      <a href="#"><button type="button" name="button">Continue Shopping</button></a>
+    </div>
+    <div id="checkout_information_form">
+      <form id="checkout_form" action="index.html" method="post">
+        {% csrf_token %}
+        <div id="form_part_1">
+          <h3 id="shipping_information">Shipping Information</h3>
+          <p>First Name:</p>
+          <input type="text" name="" value="" placeholder="First Name">
+          <p>Last Name:</p>
+          <input type="text" name="" value="" placeholder="Last Name">
+          <p>Address:</p>
+          <input type="text" name="" value="" placeholder="Address">
+          <p>City:</p>
+          <input type="text" name="" value="" placeholder="City">
+          <p>State:</p>
+          <input type="text" name="" value="" placeholder="State">
+        </div>
+        <div id="form_part_2">
+          <h3 id="billing_information">Billing Information</h3>
+          <input type="checkbox" name="" value="">Same as Shipping Information
+          <p>First Name:</p>
+          <input type="text" name="" value="" placeholder="First Name">
+          <p>Last Name:</p>
+          <input type="text" name="" value="" placeholder="Last Name">
+          <p>Address:</p>
+          <input type="text" name="" value="" placeholder="Address">
+          <p>City:</p>
+          <input type="text" name="" value="" placeholder="City">
+          <p>State:</p>
+          <input type="text" name="" value="" placeholder="State">
+          <p>Card#:</p>
+          <input type="text" name="" value="" placeholder="Enter Card Number Here">
+          <p>Security Code:</p>
+          <input type="text" name="" value="" placeholder="Enter Security Here">
+          <p>Expiration Date:</p>
+          <input type="date" name="" value="" placeholder="">
+        </div>
+      </form>
+    </div>
+  </body>
+</html>

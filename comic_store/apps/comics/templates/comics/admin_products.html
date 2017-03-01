@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title></title>
+        {% load staticfiles %}
+<link rel="stylesheet" href="{% static '/comics/css/admin_styles.css' %}"media="screen" title="no title"  charset="utf-8">    </head>
+    <body>
+        <ul>
+            <li>Dashboard</li>
+            <li><a class="header_link" href = '/dashboard/orders'>Orders</a></li>
+            <li><a class="header_link" href = '/dashboard/products'>Products</a></li>
+            <li id="logoff"><a class="header_link" href = '#'>Log Off</a></li>
+        </ul>
+        <h1>Products</h1>
+        <form>
+            Search<input type="text" name="prodsearch">
+        </form>
+        <table id="products_table">
+            <th>Picture</th>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Inventory Count</th>
+            <th>Quantity Sold</th>
+            <th>Action</th>
+            {% for product in products %}
+            <tr>
+                <td>{{product.image}}</td>
+                <td>{{product.id}}</td>
+                <td>{{product.name}}</td>
+                <td>{{product.quantity}}</td>
+                <td>1000</td> <!-- NEED TO CHANGE -->
+                <td><a href='#'>edit</a></td>
+            </tr>
+            {% endfor %}
+        </table>
+    </body>
+</html>

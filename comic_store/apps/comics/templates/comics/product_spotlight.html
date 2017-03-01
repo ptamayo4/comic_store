@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Product Spotlight Page</title>
+    {% load staticfiles %}
+    <link rel="stylesheet" href="{% static 'comics/css/style.css' %}"media="screen" title="no title"  charset="utf-8">
+  </head>
+  <body>
+    <h1 id="product_spotlight_title">Product Spotlight {{ product_name }}</h1>
+    <div class="product_spotlight_container">
+      <h1>{{ product_name }}</h1>
+      <div class="product_image_container_prime">
+        <img src="#" alt="">
+      </div>
+      <div class="product_spotlight_image">
+        <img src="#" alt="">
+      </div>
+      <div class="product_spotlight_image">
+        <img src="#" alt="">
+      </div>
+      <div class="product_spotlight_image">
+        <img src="#" alt="">
+      </div>
+      <div class="product_spotlight_image">
+        <img src="#" alt="">
+      </div>
+      <div class="product_spotlight_image">
+        <img src="#" alt="">
+      </div>
+      <div class="product_spotlight_image">
+        <img src="#" alt="">
+      </div>
+    </div>
+    <div class="product_description">
+      <h3>Item Description{{ product_description }}</h3>
+      <p id="product_description_display">Here goes the description {{product_description}}</p>
+    </div>
+    <div id="buy_this_product">
+      <form class="product_price_selection_form" action="#" method="post">
+        {% csrf_token %}
+        <select class="price_select_dropdown" name="">
+          <option value="">{{ product_price_1 }}</option>
+          <option value="">{{ product_price_2 }}</option>
+          <option value="">{{ product_price_3 }}</option>
+          <option value="">{{ product_price_4 }}</option>
+        </select>
+        <button type="submit" name="Buy">Buy</button>
+      </form>
+    </div>
+    <div id="similar_products_footer">
+      <h3>Similar Products</h2>
+        <div id="product_gallery">
+          <div class="product_gallery_item">
+            <div class="product_image_holder">
+                <a href="#"><img src="#" alt="product image"></a>
+            </div>
+            <p class="product_price">Product Price{{ product_price }}</p>
+            <p class="product_name">Product Name{{ product_name }}</p>
+          </div>
+        </div>
+        <!-- <div id="product_gallery">
+          {% for product in products %}
+          <a href="#">
+            <div class="product_gallery_item">
+              <div class="product_image_holder">
+                  <img src="#" alt="product image">
+              </div>
+              <p class="product_price">Product Price{{ product_price }}</p>
+              <p class="product_name">Product Name{{ product_name }}</p>
+            </div>
+          </a>
+          {% endfor %}
+        </div> -->
+    </div>
+  </body>
+</html>

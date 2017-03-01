@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Products Main Page</title>
+    {% load staticfiles %}
+    <link rel="stylesheet" href="{% static 'comics/css/style.css' %}"media="screen" title="no title"  charset="utf-8">
+  </head>
+  <body>
+    <div id="products_console_1">
+      {% csrf_token %}
+      <form id="product_search" action="/search_product" method="post">
+        <input type="text" name="" value="" placeholder="Product Name">
+        <button type="search" name="Search">Search</button>
+      </form>
+      <h2>Categories</h2>
+      <ul>
+        <li>Comics {{ comics_inventory }}</li>
+        <li>Graphic Novels {{ graphic_novels_inventory }}</li>
+        <li>Tabletop Games {{ tabletop_inventory }}</li>
+        <li>Miniatures {{ miniatures_inventory }}</li>
+      </ul>
+      <a id="show_all_products_link" href="#">Show All</a>
+    </div>
+    <div id="products_console_2">
+      <h1>Products {{ page_number }}</h1>
+      <a class="products_gallery_navigation_links" href="#">first</a>
+      <a class="products_gallery_navigation_links" href="#">prev</a>
+      <p id="page_number_sig">{{ page_number }}</p>
+      <a class="products_gallery_navigation_links" href="#">next</a>
+      <form id="product_navigation" action="#" method="post">
+        {% csrf_token %}
+        Sorted by: <select id="product_selection_drop_down" name="">
+          <option value="">Price</option>
+          <option value="">Most Popular</option>
+        </select>
+      </form>
+      <div id="product_gallery">
+        {%for product in products%}
+        <a href="/product_spotlight/{{product.id}}">
+          <div class="product_gallery_item">
+            <div class="product_image_holder">
+                <!-- <img class="product-image" src="{%static 'comics/images/guardians1.jpg'%}" alt="{{product.name}} comic picture"> -->
+            </div>
+            <p class="product_price">{{product.price}}</p>
+            <p class="product_name">{{product.name}}</p>
+          </div>
+        </a>
+        {%endfor%}
+      </div>
+      <!-- <div id="product_gallery">
+        {% for product in products %}
+        <a href="#">
+          <div class="product_gallery_item">
+            <div class="product_image_holder">
+                <img src="#" alt="product image">
+            </div>
+            <p class="product_price">Product Price{{ product_price }}</p>
+            <p class="product_name">Product Name{{ product_name }}</p>
+          </div>
+        </a>
+        {% endfor %}
+      </div> -->
+    </div>
+  </body>
+</html>
