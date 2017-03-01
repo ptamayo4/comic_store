@@ -17,7 +17,7 @@
       <h2>Categories</h2>
       <ul id="categories">
         {%for category in categories%}
-          <li>{{category.name}}</li>
+          <li><a href='/product/category/{{category.id}}'>{{category.name}} ( {{category.products.count}} )</a></li>
         {%endfor%}
         <!-- <li>Comics {{ comics_inventory }}</li>
         <li>Graphic Novels {{ graphic_novels_inventory }}</li>
@@ -44,7 +44,7 @@
         <a href="/product_spotlight/{{product.id}}">
           <div class="product_gallery_item">
             <div class="product_image_holder">
-                <!-- <img class="product-image" src="{%static 'comics/images/guardians1.jpg'%}" alt="{{product.name}} comic picture"> -->
+                <img class="product-image" src="{%static 'comics/images/guardians1.jpg'%}" alt="{{product.name}} comic picture">
             </div>
             <p class="product_price">{{product.price}}</p>
             <p class="product_name">{{product.name}}</p>

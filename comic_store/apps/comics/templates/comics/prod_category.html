@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Category</title>
+  </head>
+  <body>
+    {%for product in products%}
+      <h3>{{product.name}}</h3>
+    {%empty%}
+      <p>No product in category</p>
+    {%endfor%}
+  </body>
+</html>
