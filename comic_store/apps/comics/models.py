@@ -4,6 +4,9 @@ from decimal import Decimal
 import re
 import bcrypt
 EMAIL_REGEX = re.compile(r'^[a-zA-Z0-9.+_-]+@[a-zA-Z0-9._-]+\.[a-zA-Z]+$')
+CHAR_DIGIT_REGEX = re.compile(r'^[a-zA-Z0-9_.-]*$')
+CATEGORY_REGEX = re.compile(r'^[A-Za-z]*$')
+PRICE_REGEX = re.compile(r'^(?!0+(\.0+)?$)\d{0,5}(.\d{1,2})?$')
 
 class UserManager(models.Manager):
     def admin_login(self, post_data):
@@ -54,7 +57,40 @@ class OrderManager(models.Manager):
             # add product to order object
             the_product = Product.objects.get(id=product_id)
             the_order.products.add(the_product)
+        # depending on what we return, change this following line
         return {'the_order': the_order}
+
+class ProductManager(models.Manager):
+    def validate_product(self, post_data):
+        error_msgs = []
+        p_name = post_data['p_name']
+        p_description = post_data['p_description']
+        p_category = post_data['p_category']
+        new_p_category = post_data['new_p_category']
+        p_price = post_data['p_price']
+        if len(p_name) < 2:
+            error_msgs.append('Product name must be 2 or more characters')
+        elif not CHAR_DIGIT_REGEX.match(p_name):
+            error_msgs.append('Invalid product name')
+        if len(p_description) < 1:
+            error_msgs.append('Product description cannot be blank')
+        if not CATEGORY_REGEX.match(new_p_category):
+            error_msgs.append('Invalid category')
+        # price form
+        if p_price < 0:
+            error_msgs.append('Cannot have negative price')
+        elif p_price >= 1000:
+            error_msgs.append('Price must be between $0 and $999.99')
+        # regex for price
+        elif not PRICE_REGEX.match(p_price):
+            error_msgs.append('Invalid price')
+        if error_msgs:
+            return {'errors': error_msgs}
+        else:
+            # create product
+            the_product = Product.objects.create(name=p_name, description=p_description, image=image, price=p_price)
+            # depending on what we return
+            return {'the_product': the_product}
 
 #class OrderManager(models.Manager):
 #    def create_order(self, post_data, user_id):
@@ -68,11 +104,11 @@ class User(models.Model):
     first_name  =   models.CharField(max_length=60)
     last_name   =   models.CharField(max_length=60)
     admin_auth  =   models.BooleanField(default=False)
-    addr_street =   models.CharField(max_length=100)
-    street_two  =   models.CharField(max_length=100)
-    addr_city   =   models.CharField(max_length=100)
-    addr_state  =   models.CharField(max_length=20)
-    addr_zip    =   models.IntegerField()
+    #addr_street =   models.CharField(max_length=100)
+    #street_two  =   models.CharField(max_length=100)
+    #addr_city   =   models.CharField(max_length=100)
+    #addr_state  =   models.CharField(max_length=20)
+    #addr_zip    =   models.IntegerField()
     created_at  =   models.DateTimeField(auto_now_add=True)
     updated_at  =   models.DateTimeField(auto_now=True)
     userManager =   UserManager()
@@ -86,6 +122,7 @@ class Product(models.Model):
     quantity    =   models.IntegerField(default=0)
     created_at  =   models.DateTimeField(auto_now_add=True)
     updated_at  =   models.DateTimeField(auto_now=True)
+    productManager = ProductManager()
 
 class Category(models.Model):
     name        =   models.CharField(max_length=60)
@@ -97,12 +134,18 @@ class Order(models.Model):
     products    =   models.ManyToManyField(Product, related_name="product_orders")
     user        =   models.ForeignKey(User, related_name="user_orders")
     # shipping address
-    addr_street =   models.CharField(max_length=100)
-    street_two  =   models.CharField(max_length=100)
-    addr_city   =   models.CharField(max_length=100)
-    addr_state  =   models.CharField(max_length=20)
     ####
     total       =   models.DecimalField(max_digits=5,decimal_places=2)
     status      =   models.IntegerField(default=0)
     created_at  =   models.DateTimeField(auto_now_add=True)
     updated_at  =   models.DateTimeField(auto_now=True)
+    orderManager = OrderManager()
+
+class Location(models.Model):
+    addr_street =   models.CharField(max_length=100)
+    street_two  =   models.CharField(max_length=100)
+    addr_city   =   models.CharField(max_length=100)
+    addr_state  =   models.CharField(max_length=20)
+    addr_zip    =   models.IntegerField()
+    user        =   models.OneToOneField(User, related_name='user_location')
+    order       =   models.OneToOneField(Order, related_name='shipping_location')
