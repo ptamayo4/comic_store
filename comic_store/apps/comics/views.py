@@ -18,7 +18,7 @@ def add_test(request):
     # )
 
     # Add Product
-    # Product.objects.create(
+    # Product.productManager.create(
     #     name='ProductThree',
     #     description='the desc',
     #     image = 'guardians1.jpg',
@@ -26,7 +26,7 @@ def add_test(request):
     #     quantity = 5,
     # )
     # category = Category.objects.get(name='Category2')
-    # product = Product.objects.get(name='ProductThree')
+    # product = Product.productManager.get(name='ProductThree')
     # category.products.add(product)
 
     return redirect('/test')
@@ -34,10 +34,10 @@ def test(request):
     # ============== #
     # ADD QUERY HERE #
     # ============== #
-    # products = Product.objects.all()
+    # products = Product.productManager.all()
     context = {
         'categories' : Category.objects.all(),
-        'products' : Product.objects.all()
+        'products' : Product.productManager.all()
     }
     return render(request,'comics/test.html', context)
 
@@ -47,7 +47,7 @@ def index(request):
     # commented so it doesnt keep making new prods for every refresh #
     ##################################################################
 
-    # Product.objects.create(
+    # Product.productManager.create(
     # name        =   "Superman",
     # description =   "Some dork in a cape",
     # image       =   "guardians1.jpg",
@@ -56,7 +56,7 @@ def index(request):
     # quantity    =   42
     # )
     context = {
-    "products":Product.objects.all()
+    "products":Product.productManager.all()
     }
     return render(request, 'comics/index.html', context)
 
@@ -97,7 +97,7 @@ def register(request):
 
 def product_view(request):
     context = {
-    "products":Product.objects.all()
+    "products":Product.productManager.all()
     }
     return render(request, 'comics/admin_products.html', context)
 
@@ -108,13 +108,13 @@ def products_main(request):
     if 'cart' not in request.session:
         request.session['cart'] = []
     context = {
-        'products' : Product.objects.all(),
+        'products' : Product.productManager.all(),
         'categories' : Category.objects.all(),
      }
     return render(request, 'comics/products_main.html', context)
 def product_category(request,category_id):
     context = {
-        'products' : Product.objects.filter(product_categories__id= category_id)
+        'products' : Product.productManager.filter(product_categories__id= category_id)
     }
     return render(request,'comics/prod_category.html', context)
 

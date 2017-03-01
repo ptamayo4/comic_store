@@ -51,11 +51,11 @@ class OrderManager(models.Manager):
         street_two = post_data['street_two']
         addr_city = post_data['addr_city']
         addr_state = post_data['addr_state']
-        the_order = Order.objects.create(addr_street=addr_street, street_two=street_two, addr_city=addr_city, addr_state=addr_state)
+        the_order = Order.orderManager.create(addr_street=addr_street, street_two=street_two, addr_city=addr_city, addr_state=addr_state)
         the_order.user.add(the_user)
         for product_id in product_ids:
             # add product to order object
-            the_product = Product.objects.get(id=product_id)
+            the_product = Product.productManager.get(id=product_id)
             the_order.products.add(the_product)
         # depending on what we return, change this following line
         return {'the_order': the_order}
@@ -88,7 +88,7 @@ class ProductManager(models.Manager):
             return {'errors': error_msgs}
         else:
             # create product
-            the_product = Product.objects.create(name=p_name, description=p_description, image=image, price=p_price)
+            the_product = Product.productManager.create(name=p_name, description=p_description, image=image, price=p_price)
             # depending on what we return
             return {'the_product': the_product}
 
