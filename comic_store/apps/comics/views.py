@@ -2,6 +2,45 @@ from django.shortcuts import render, redirect
 from models import *
 from django.contrib import messages
 
+def add_test(request):
+    # ============== #
+    # ADD QUERY HERE #
+    # ============== #
+    # Add category
+    # Category.objects.create(
+    #     name = 'Category1'
+    # )
+    # Category.objects.create(
+    #     name = 'Category2'
+    # )
+    # Category.objects.create(
+    #     name = 'Category3'
+    # )
+
+    # Add Product
+    # Product.objects.create(
+    #     name='ProductThree',
+    #     description='the desc',
+    #     image = 'guardians1.jpg',
+    #     price = 91.10,
+    #     quantity = 5,
+    # )
+    # category = Category.objects.get(name='Category2')
+    # product = Product.objects.get(name='ProductThree')
+    # category.products.add(product)
+
+    return redirect('/test')
+def test(request):
+    # ============== #
+    # ADD QUERY HERE #
+    # ============== #
+    # products = Product.objects.all()
+    context = {
+        'categories' : Category.objects.all(),
+        'products' : Product.objects.all()
+    }
+    return render(request,'comics/test.html', context)
+
 def index(request):
 
     ##################################################################
@@ -66,10 +105,18 @@ def orders_view(request):
     return render(request, 'comics/admin_orders.html')
 
 def products_main(request):
+    if 'cart' not in request.session:
+        request.session['cart'] = []
     context = {
-        'products' : Product.objects.all()
-    }
+        'products' : Product.objects.all(),
+        'categories' : Category.objects.all(),
+     }
     return render(request, 'comics/products_main.html', context)
+def product_category(request,category_id):
+    context = {
+        'products' : Product.objects.filter(product_categories__id= category_id)
+    }
+    return render(request,'comics/prod_category.html', context)
 
 def product_spotlight(request):
     return render(request, 'comics/product_spotlight.html')
