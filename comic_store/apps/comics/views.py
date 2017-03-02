@@ -68,10 +68,24 @@ def index(request):
         request.session['product_ids'] = {}
 
     # User.userManager.create(
-    # email       =   "ptamayo4@gmail.com",
+    # email       =   "brian@gmail.com",
     # password    =   "12345678",
-    # first_name  =   "Patrick",
-    # last_name   =   "Tamayo",
+    # first_name  =   "Brian",
+    # last_name   =   "Sung",
+    # admin_auth  =   True
+    # )
+    # User.userManager.create(
+    # email       =   "james@gmail.com",
+    # password    =   "12345678",
+    # first_name  =   "James",
+    # last_name   =   "Sanders",
+    # admin_auth  =   True
+    # )
+    # User.userManager.create(
+    # email       =   "kerub@gmail.com",
+    # password    =   "12345678",
+    # first_name  =   "kerub",
+    # last_name   =   "Q",
     # admin_auth  =   True
     # )
 
@@ -84,7 +98,6 @@ def index(request):
     # Category.objects.create(
     #     name = 'Samurai'
     # )
-
     context = {
     "products":Product.productManager.all()
     }
