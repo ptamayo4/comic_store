@@ -3,11 +3,12 @@ from django.db import models
 from decimal import Decimal
 import re
 import bcrypt
+# import settings
 EMAIL_REGEX = re.compile(r'^[a-zA-Z0-9.+_-]+@[a-zA-Z0-9._-]+\.[a-zA-Z]+$')
 CHAR_DIGIT_REGEX = re.compile(r'^[a-zA-Z0-9_.-]*$')
 CATEGORY_REGEX = re.compile(r'^[A-Za-z]*$')
 PRICE_REGEX = re.compile(r'^(?!0+(\.0+)?$)\d{0,5}(.\d{1,2})?$')
-
+NO_LET_REGEX = re.compile(r'^[a-zA-Z]+$')
 class UserManager(models.Manager):
     def admin_login(self, post_data):
         error_msgs = []
@@ -149,3 +150,79 @@ class Location(models.Model):
     addr_zip    =   models.IntegerField()
     user        =   models.OneToOneField(User, related_name='user_location')
     order       =   models.OneToOneField(Order, related_name='shipping_location')
+
+# ============== #
+# === STRIPE === #
+# ============== #
+class Sale(models.Model):
+    def __init__(self, *args, **kwargs):
+        super(Sale, self).__init__(*args, **kwargs)
+
+        # bring in stripe, and get the api key from settings.py
+        import stripe
+        stripe.api_key = "sk_test_5HJSvP0XKmzN122N5ntJ3zfM"
+
+        self.stripe = stripe
+
+    # store the stripe charge id for this sale
+    charge_id = models.CharField(max_length=32)
+
+    # you could also store other information about the sale
+    # but I'll leave that to you!
+
+    def charge(self, price_in_cents, number, exp_month, exp_year, cvc):
+        """
+        Takes a the price and credit card details: number, exp_month,
+        exp_year, cvc.
+
+        Returns a tuple: (Boolean, Class) where the boolean is if
+        the charge was successful, and the class is response (or error)
+        instance.
+        """
+
+        if self.charge_id: # don't let this be charged twice!
+            return False, Exception(message="Already charged.")
+
+        try:
+            response = self.stripe.Charge.create(
+                amount = price_in_cents,
+                currency = "usd",
+                card = {
+                    "number" : number,
+                    "exp_month" : exp_month,
+                    "exp_year" : exp_year,
+                    "cvc" : cvc,
+
+                    #### it is recommended to include the address!
+                    #"address_line1" : self.address1,
+                    #"address_line2" : self.address2,
+                    #"daddress_zip" : self.zip_code,
+                    #"address_state" : self.state,
+                },
+                description='Thank you for your purchase!')
+
+            self.charge_id = response.id
+
+        except self.stripe.CardError, ce:
+            # charge failed
+            return False, ce
+
+        return True, response
+
+    def validate_card(request, post_data):
+        error_msgs=[]
+        if not NO_LET_REGEX.match(post_data['number']):
+            error.msgs.append('Card Number invalid')
+        if len(post_data['number']) < 16:
+            error.msgs.append('Card number invalid')
+        if len(post_data['cvc']) != 3:
+            error.msgs.append('CVC is invalid')
+
+        if error_msgs:
+            return {'errors',error_msgs}
+        else:
+            return {'validated_card': 'validated'}
+
+# ===================== #
+# === END OF STRIPE === #
+# ===================== #
