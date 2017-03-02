@@ -11,7 +11,7 @@ PRICE_REGEX = re.compile(r'^(?!0+(\.0+)?$)\d{0,5}(.\d{1,2})?$')
 NO_LET_REGEX = re.compile(r'^[a-zA-Z]+$')
 NAME_REGEX = re.compile(r'^[A-Za-z\s]{1,}[\.]{0,1}[A-Za-z\s]{0,}$')
 STREET_ADDRESS_REGEX = re.compile(r'\b[0-9]{1,3}(?:\s\p{L}+)+')
-PRODUCT_REGEX = re.compile(r'^[A-Z0-9 _]*[A-Z0-9][A-Z0-9 _]*$')
+PRODUCT_REGEX = re.compile(r'[^ ][ A-Za-z\d\D]*$')
 class UserManager(models.Manager):
     def admin_login(self, post_data):
         error_msgs = []
