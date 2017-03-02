@@ -194,7 +194,7 @@ def display_test(request):
             'order_products': the_order.products.all()
             }
     return render(request, 'comics/product_test.html', context)
-  
+
 def product_edit(request, product_id):
     context = {
     "product": Product.productManager.get(id=product_id),
@@ -261,6 +261,12 @@ def charge_process(request,order_id):
         #         messages.error(request,error)
         #     return redirect('/charge/' + str(order_id))
         # if 'validated_card' in card:
+
+        # order = Order.OrderManager.get(id=order_id)
+        # total_amount = order.total
+
+        #total_amount = request.session['total']
+
         sale = Sale()
         sale.charge(99999999,request.POST['number'],request.POST['exp_month'],request.POST['exp_year'],request.POST['cvc'])
         return redirect('/')
@@ -268,4 +274,3 @@ def charge_process(request,order_id):
 # ===================== #
 # === END OF STRIPE === #
 # ===================== #
-
