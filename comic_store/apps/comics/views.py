@@ -1,7 +1,14 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, render_to_response
+from django.http import HttpResponse
+from django.template import RequestContext
 from models import *
 from django.contrib import messages
-
+from django.conf import settings
+from django.core.files.storage import FileSystemStorage
+from forms import SalePaymentForm
+from django.views.decorators.csrf import csrf_exempt
+import re
+NO_LET_REGEX = re.compile(r'^-?[0-9]+$')
 def add_test(request):
     # ============== #
     # ADD QUERY HERE #
@@ -55,8 +62,28 @@ def index(request):
     # category    =   "Superhero",
     # quantity    =   42
     # )
+
     if 'product_ids' not in request.session:
         request.session['product_ids'] = {}
+
+    # User.userManager.create(
+    # email       =   "ptamayo4@gmail.com",
+    # password    =   "12345678",
+    # first_name  =   "Patrick",
+    # last_name   =   "Tamayo",
+    # admin_auth  =   True
+    # )
+
+    # Category.objects.create(
+    #     name = 'SciFi'
+    # )
+    # Category.objects.create(
+    #     name = 'Western'
+    # )
+    # Category.objects.create(
+    #     name = 'Samurai'
+    # )
+
     context = {
     "products":Product.productManager.all()
     }
@@ -89,18 +116,23 @@ def register(request):
         first_name  =   request.POST['first_name'],
         last_name   =   request.POST['last_name'],
         admin_auth  =   request.POST['admin'],
-        addr_street =   request.POST['addr_street'],
-        street_two  =   request.POST['street_two'],
-        addr_city   =   request.POST['addr_city'],
-        addr_state  =   request.POST['state'],
-        addr_zip    =   request.POST['addr_zip']
+        # addr_street =   request.POST['addr_street'],
+        # street_two  =   request.POST['street_two'],
+        # addr_city   =   request.POST['addr_city'],
+        # addr_state  =   request.POST['state'],
+        # addr_zip    =   request.POST['addr_zip']
         )
     return redirect('/admin')
 
 def product_view(request):
     context = {
-    "products":Product.productManager.all()
+    "products":Product.productManager.all(),
+    "categories": Category.objects.all()
     }
+    # print context['categories'][1].name
+    # prodOfCat = Category.objects.filter(products__name="2001")
+    # for product in prodOfCat:
+    #     print product.name
     return render(request, 'comics/admin_products.html', context)
 
 def orders_view(request):
@@ -114,6 +146,7 @@ def products_main(request):
         'categories' : Category.objects.all(),
      }
     return render(request, 'comics/products_main.html', context)
+
 def product_category(request,category_id):
     context = {
         'products' : Product.productManager.filter(product_categories__id= category_id)
@@ -128,15 +161,19 @@ def shopping_cart(request):
 
 def product_adder(request):
     if request.method=="POST":
-        product = Product.productManager.validate_product(request.POST)
+        print request.POST
+        print type(request.POST['p_price'])
+        image = request.FILES['image']
+        product = Product.productManager.validate_product(request.POST, image)
         if 'errors' in product:
             for error in product['errors']:
                 messages.error(request, error)
-                return redirect('/product_adder')
+            return redirect('/dashboard/products')
         if 'the_product' in product:
             messages.success(request, "Successfully added product!")
             return redirect('/dashboard/products')
     return redirect('/dashboard/products')
+
 
 def display_test(request):
     # stop creating the the best product
@@ -157,3 +194,78 @@ def display_test(request):
             'order_products': the_order.products.all()
             }
     return render(request, 'comics/product_test.html', context)
+  
+def product_edit(request, product_id):
+    context = {
+    "product": Product.productManager.get(id=product_id),
+    "categories": Category.objects.all()
+    }
+    print context['product'].description
+    return render(request, 'comics/product_edit.html', context)
+
+def product_delete(request, product_id):
+    Product.productManager.get(id=product_id).delete()
+    print "Successfully deleted " + product_id
+    return redirect('/dashboard/products')
+
+def product_update(request, product_id):
+    if request.method=="POST":
+        update_product = Product.productManager.update_product(request.POST, product_id)
+    return redirect('/dashboard/products')
+
+# ============== #
+# === STRIPE === #
+# ============== #
+@csrf_exempt
+def charge(request,order_id):
+    context = {
+        'order_id' : order_id
+    }
+    # if 'total' not in request.session:
+    #     request.session['total'] = 300
+    # request.session['total'] = 4000
+    # # the_amount = request.session['total']
+    # # print the_amount
+    # if request.method == "POST":
+    #     # total = charge_me(10000)
+    #     form = SalePaymentForm(request.POST)
+    #
+    #     if form.is_valid(): # charges the card
+    #         sale = Sale()
+    #         sale.charge(100000,4242424242424242,01,2019,424)
+    #         return HttpResponse("Success! We've charged your card!")
+    # else:
+    #     form = SalePaymentForm()
+
+    return render(request , "includes/card.html" , context)
+
+def charge_process(request,order_id):
+    if request.method == 'POST':
+        # sale = sale()
+        # card = sale.validate_card(request.POST)
+        if not NO_LET_REGEX.match(request.POST['number']):
+            # error.msgs.append('Card Number invalid')
+            messages.error(request,'Card Number invalid')
+            return redirect('/charge/' + str(order_id))
+        if len(request.POST['number']) != 16:
+            # error.msgs.append('Card number invalid')
+            messages.error(request,'Card number invalid')
+            return redirect('/charge/' + str(order_id))
+        if len(request.POST['cvc']) != 3:
+            # error.msgs.append('CVC is invalid')
+            messages.error(request,'CVC is invalid')
+            return redirect('/charge/' + str(order_id))
+
+        # if 'errors' in card:
+        #     for error in card['errors']:
+        #         messages.error(request,error)
+        #     return redirect('/charge/' + str(order_id))
+        # if 'validated_card' in card:
+        sale = Sale()
+        sale.charge(99999999,request.POST['number'],request.POST['exp_month'],request.POST['exp_year'],request.POST['cvc'])
+        return redirect('/')
+
+# ===================== #
+# === END OF STRIPE === #
+# ===================== #
+

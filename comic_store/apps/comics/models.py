@@ -3,15 +3,15 @@ from django.db import models
 from decimal import Decimal
 import re
 import bcrypt
+# import settings
 EMAIL_REGEX = re.compile(r'^[a-zA-Z0-9.+_-]+@[a-zA-Z0-9._-]+\.[a-zA-Z]+$')
 CHAR_DIGIT_REGEX = re.compile(r'^[a-zA-Z0-9_.-]*$')
 CATEGORY_REGEX = re.compile(r'^[A-Za-z]*$')
 PRICE_REGEX = re.compile(r'^(?!0+(\.0+)?$)\d{0,5}(.\d{1,2})?$')
+NO_LET_REGEX = re.compile(r'^[a-zA-Z]+$')
 NAME_REGEX = re.compile(r'^[A-Za-z\s]{1,}[\.]{0,1}[A-Za-z\s]{0,}$')
 STREET_ADDRESS_REGEX = re.compile(r'\b[0-9]{1,3}(?:\s\p{L}+)+')
 PRODUCT_REGEX = re.compile(r'^[A-Z0-9 _]*[A-Z0-9][A-Z0-9 _]*$')
-
-
 class UserManager(models.Manager):
     def admin_login(self, post_data):
         error_msgs = []
@@ -132,13 +132,16 @@ class OrderManager(models.Manager):
         return {'the_order': the_order}
 
 class ProductManager(models.Manager):
-    def validate_product(self, post_data):
+    def validate_product(self, post_data, submitted_image):
         error_msgs = []
         p_name = post_data['p_name']
         p_description = post_data['p_description']
-        p_category = post_data['p_category']
+        if 'p_category' in post_data:
+            p_category = post_data['p_category']
         new_p_category = post_data['new_p_category']
-        p_price = post_data['p_price']
+        p_price = Decimal(post_data['p_price'])
+        p_quantity = int(post_data['p_quantity'])
+        print submitted_image
         if len(p_name) < 2:
             error_msgs.append('Product name must be 2 or more characters')
         elif not PRODUCT_REGEX.match(p_name):
@@ -152,26 +155,50 @@ class ProductManager(models.Manager):
             error_msgs.append('Cannot have negative price')
         elif p_price >= 1000:
             error_msgs.append('Price must be between $0 and $999.99')
+        if not submitted_image:
+            error_msgs.append('You failed to upload a picture')
+        if new_p_category:
+            category = new_p_category
+        else:
+            category = p_category
         # regex for price
-        elif not PRICE_REGEX.match(p_price):
-            error_msgs.append('Invalid price')
+        # elif not PRICE_REGEX.match(p_price):
+        #     error_msgs.append('Invalid price')
         if error_msgs:
             return {'errors': error_msgs}
-        elif new_p_category:
-            try:
-                the_category = Category.objects.get(name=post_data['new_p_category'])
-                the_product = Product.productManager.create(name=p_name, description=p_description, image=p_image, price=p_price, quantity=p_quantity, product_categories=the_category)
-                return {'the_product': the_product}
-            except Category.DoesNotExist:
-                the_catgory = Category.objects.create(name=post_data['new_p_category'])
-                the_product = Product.productManager.create(name=p_name, description=p_description, image=p_image, price=p_price, quantity=p_quantity, product_categories=the_category)
-                return {'the_product': the_product}
         else:
-            # create product
-            the_category = Category.objects.create(name=p_category)
-            the_product = Product.productManager.create(name=p_name, description=p_description, image=image, price=p_price)
+            if new_p_category:
+                new_cat = Category.objects.create(name=category)
+                the_product = Product.productManager.create(name=p_name, description=p_description, image=submitted_image, price=p_price, quantity=p_quantity, category=new_cat)
+            else:
+                old_cat = Category.objects.get(name=category)
+                the_product = Product.productManager.create(name=p_name, description=p_description, image=submitted_image, price=p_price, quantity=p_quantity, category=old_cat)
             # depending on what we return
             return {'the_product': the_product}
+
+    def update_product(self, post_data, product_id):
+        error_msgs = []
+        new_name = post_data['edit_name']
+        new_desc = post_data['edit_description']
+        if 'edit_category' in post_data:
+            edit_category = post_data['edit_category']
+        new_edit_category = post_data['new_edit_category']
+        new_price         = post_data['edit_price']
+        new_quantity      = post_data['edit_quantity']
+        if new_edit_category:
+            new_cat = Category.objects.create(name=new_edit_category)
+            Product.productManager.filter(id=product_id).update(name=new_name, description=new_desc, price=new_price, quantity=new_quantity, category=new_cat)
+        else:
+            old_category = Category.objects.get(name=edit_category)
+            Product.productManager.filter(id=product_id).update(name=new_name, description=new_desc, price=new_price, quantity=new_quantity, category=old_category)
+
+
+# class OrderManager(models.Manager):
+#    def create_order(self, post_data, user_id):
+#        the_user = User.objects.get(id=user_id)
+#
+#    def add_to_order(self, post_data, user_id):
+
 
 class User(models.Model):
     email       =   models.CharField(max_length=100, default=None)
@@ -183,20 +210,20 @@ class User(models.Model):
     updated_at  =   models.DateTimeField(auto_now=True)
     userManager =   UserManager()
 
-#class Category(models.Model):
-#    name        =   models.CharField(max_length=60)
-#    created_at  =   models.DateTimeField(auto_now_add=True)
-#    updated_at  =   models.DateTimeField(auto_now=True)
-    #categoryManager = CategoryManager()
+class Category(models.Model):
+    name        =   models.CharField(max_length=60)
+    created_at  =   models.DateTimeField(auto_now_add=True)
+    updated_at  =   models.DateTimeField(auto_now=True)
 
 class Product(models.Model):
     name        =   models.CharField(max_length=60)
     description =   models.TextField(max_length=1000)
-    image       =   models.CharField(max_length=100)
+    image       =   models.ImageField(upload_to = 'pic_folder/', default = 'pic_folder/None/no-img.jpg')
     price       =   models.DecimalField(max_digits=5,decimal_places=2)
     quantity    =   models.IntegerField(default=0)
     created_at  =   models.DateTimeField(auto_now_add=True)
     updated_at  =   models.DateTimeField(auto_now=True)
+    category    =   models.ForeignKey(Category, related_name="product_category", default=None)
     productManager = ProductManager()
 
 class Order(models.Model):
@@ -218,4 +245,79 @@ class Location(models.Model):
     addr_zip    =   models.IntegerField()
     user        =   models.OneToOneField(User, related_name='user_location')
     order       =   models.OneToOneField(Order, related_name='shipping_location')
-    #locationManager = LocationManager()
+
+# ============== #
+# === STRIPE === #
+# ============== #
+class Sale(models.Model):
+    def __init__(self, *args, **kwargs):
+        super(Sale, self).__init__(*args, **kwargs)
+
+        # bring in stripe, and get the api key from settings.py
+        import stripe
+        stripe.api_key = "sk_test_5HJSvP0XKmzN122N5ntJ3zfM"
+
+        self.stripe = stripe
+
+    # store the stripe charge id for this sale
+    charge_id = models.CharField(max_length=32)
+
+    # you could also store other information about the sale
+    # but I'll leave that to you!
+
+    def charge(self, price_in_cents, number, exp_month, exp_year, cvc):
+        """
+        Takes a the price and credit card details: number, exp_month,
+        exp_year, cvc.
+
+        Returns a tuple: (Boolean, Class) where the boolean is if
+        the charge was successful, and the class is response (or error)
+        instance.
+        """
+
+        if self.charge_id: # don't let this be charged twice!
+            return False, Exception(message="Already charged.")
+
+        try:
+            response = self.stripe.Charge.create(
+                amount = price_in_cents,
+                currency = "usd",
+                card = {
+                    "number" : number,
+                    "exp_month" : exp_month,
+                    "exp_year" : exp_year,
+                    "cvc" : cvc,
+
+                    #### it is recommended to include the address!
+                    #"address_line1" : self.address1,
+                    #"address_line2" : self.address2,
+                    #"daddress_zip" : self.zip_code,
+                    #"address_state" : self.state,
+                },
+                description='Thank you for your purchase!')
+
+            self.charge_id = response.id
+
+        except self.stripe.CardError, ce:
+            # charge failed
+            return False, ce
+
+        return True, response
+
+    def validate_card(request, post_data):
+        error_msgs=[]
+        if not NO_LET_REGEX.match(post_data['number']):
+            error.msgs.append('Card Number invalid')
+        if len(post_data['number']) < 16:
+            error.msgs.append('Card number invalid')
+        if len(post_data['cvc']) != 3:
+            error.msgs.append('CVC is invalid')
+
+        if error_msgs:
+            return {'errors',error_msgs}
+        else:
+            return {'validated_card': 'validated'}
+
+# ===================== #
+# === END OF STRIPE === #
+# ===================== #
