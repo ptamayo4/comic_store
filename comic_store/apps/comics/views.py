@@ -3,6 +3,8 @@ from django.http import HttpResponse
 from django.template import RequestContext
 from models import *
 from django.contrib import messages
+from django.conf import settings
+from django.core.files.storage import FileSystemStorage
 from forms import SalePaymentForm
 from django.views.decorators.csrf import csrf_exempt
 import re
@@ -60,6 +62,25 @@ def index(request):
     # category    =   "Superhero",
     # quantity    =   42
     # )
+
+    # User.userManager.create(
+    # email       =   "ptamayo4@gmail.com",
+    # password    =   "12345678",
+    # first_name  =   "Patrick",
+    # last_name   =   "Tamayo",
+    # admin_auth  =   True
+    # )
+
+    # Category.objects.create(
+    #     name = 'SciFi'
+    # )
+    # Category.objects.create(
+    #     name = 'Western'
+    # )
+    # Category.objects.create(
+    #     name = 'Samurai'
+    # )
+
     context = {
     "products":Product.productManager.all()
     }
@@ -92,18 +113,23 @@ def register(request):
         first_name  =   request.POST['first_name'],
         last_name   =   request.POST['last_name'],
         admin_auth  =   request.POST['admin'],
-        addr_street =   request.POST['addr_street'],
-        street_two  =   request.POST['street_two'],
-        addr_city   =   request.POST['addr_city'],
-        addr_state  =   request.POST['state'],
-        addr_zip    =   request.POST['addr_zip']
+        # addr_street =   request.POST['addr_street'],
+        # street_two  =   request.POST['street_two'],
+        # addr_city   =   request.POST['addr_city'],
+        # addr_state  =   request.POST['state'],
+        # addr_zip    =   request.POST['addr_zip']
         )
     return redirect('/admin')
 
 def product_view(request):
     context = {
-    "products":Product.productManager.all()
+    "products":Product.productManager.all(),
+    "categories": Category.objects.all()
     }
+    # print context['categories'][1].name
+    # prodOfCat = Category.objects.filter(products__name="2001")
+    # for product in prodOfCat:
+    #     print product.name
     return render(request, 'comics/admin_products.html', context)
 
 def orders_view(request):
@@ -117,6 +143,7 @@ def products_main(request):
         'categories' : Category.objects.all(),
      }
     return render(request, 'comics/products_main.html', context)
+
 def product_category(request,category_id):
     context = {
         'products' : Product.productManager.filter(product_categories__id= category_id)
@@ -131,14 +158,35 @@ def shopping_cart(request):
 
 def product_adder(request):
     if request.method=="POST":
-        product = Product.productManager.validate_product(request.POST)
+        print request.POST
+        print type(request.POST['p_price'])
+        image = request.FILES['image']
+        product = Product.productManager.validate_product(request.POST, image)
         if 'errors' in product:
             for error in product['errors']:
                 messages.error(request, error)
-                return redirect('/product_adder')
+            return redirect('/dashboard/products')
         if 'the_product' in product:
             messages.success(request, "Successfully added product!")
             return redirect('/dashboard/products')
+    return redirect('/dashboard/products')
+  
+def product_edit(request, product_id):
+    context = {
+    "product": Product.productManager.get(id=product_id),
+    "categories": Category.objects.all()
+    }
+    print context['product'].description
+    return render(request, 'comics/product_edit.html', context)
+
+def product_delete(request, product_id):
+    Product.productManager.get(id=product_id).delete()
+    print "Successfully deleted " + product_id
+    return redirect('/dashboard/products')
+
+def product_update(request, product_id):
+    if request.method=="POST":
+        update_product = Product.productManager.update_product(request.POST, product_id)
     return redirect('/dashboard/products')
 
 # ============== #
@@ -196,3 +244,4 @@ def charge_process(request,order_id):
 # ===================== #
 # === END OF STRIPE === #
 # ===================== #
+

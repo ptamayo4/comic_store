@@ -62,13 +62,16 @@ class OrderManager(models.Manager):
         return {'the_order': the_order}
 
 class ProductManager(models.Manager):
-    def validate_product(self, post_data):
+    def validate_product(self, post_data, submitted_image):
         error_msgs = []
         p_name = post_data['p_name']
         p_description = post_data['p_description']
-        p_category = post_data['p_category']
+        if 'p_category' in post_data:
+            p_category = post_data['p_category']
         new_p_category = post_data['new_p_category']
-        p_price = post_data['p_price']
+        p_price = Decimal(post_data['p_price'])
+        p_quantity = int(post_data['p_quantity'])
+        print submitted_image
         if len(p_name) < 2:
             error_msgs.append('Product name must be 2 or more characters')
         elif not CHAR_DIGIT_REGEX.match(p_name):
@@ -82,18 +85,46 @@ class ProductManager(models.Manager):
             error_msgs.append('Cannot have negative price')
         elif p_price >= 1000:
             error_msgs.append('Price must be between $0 and $999.99')
+        if not submitted_image:
+            error_msgs.append('You failed to upload a picture')
+        if new_p_category:
+            category = new_p_category
+        else:
+            category = p_category
         # regex for price
-        elif not PRICE_REGEX.match(p_price):
-            error_msgs.append('Invalid price')
+        # elif not PRICE_REGEX.match(p_price):
+        #     error_msgs.append('Invalid price')
         if error_msgs:
             return {'errors': error_msgs}
         else:
             # create product
-            the_product = Product.productManager.create(name=p_name, description=p_description, image=image, price=p_price)
+            if new_p_category:
+                new_cat = Category.objects.create(name=category)
+                the_product = Product.productManager.create(name=p_name, description=p_description, image=submitted_image, price=p_price, quantity=p_quantity, category=new_cat)
+            else:
+                old_cat = Category.objects.get(name=category)
+                the_product = Product.productManager.create(name=p_name, description=p_description, image=submitted_image, price=p_price, quantity=p_quantity, category=old_cat)
             # depending on what we return
             return {'the_product': the_product}
 
-#class OrderManager(models.Manager):
+    def update_product(self, post_data, product_id):
+        error_msgs = []
+        new_name = post_data['edit_name']
+        new_desc = post_data['edit_description']
+        if 'edit_category' in post_data:
+            edit_category = post_data['edit_category']
+        new_edit_category = post_data['new_edit_category']
+        new_price         = post_data['edit_price']
+        new_quantity      = post_data['edit_quantity']
+        if new_edit_category:
+            new_cat = Category.objects.create(name=new_edit_category)
+            Product.productManager.filter(id=product_id).update(name=new_name, description=new_desc, price=new_price, quantity=new_quantity, category=new_cat)
+        else:
+            old_category = Category.objects.get(name=edit_category)
+            Product.productManager.filter(id=product_id).update(name=new_name, description=new_desc, price=new_price, quantity=new_quantity, category=old_category)
+
+
+# class OrderManager(models.Manager):
 #    def create_order(self, post_data, user_id):
 #        the_user = User.objects.get(id=user_id)
 #
@@ -105,37 +136,31 @@ class User(models.Model):
     first_name  =   models.CharField(max_length=60)
     last_name   =   models.CharField(max_length=60)
     admin_auth  =   models.BooleanField(default=False)
-    #addr_street =   models.CharField(max_length=100)
-    #street_two  =   models.CharField(max_length=100)
-    #addr_city   =   models.CharField(max_length=100)
-    #addr_state  =   models.CharField(max_length=20)
-    #addr_zip    =   models.IntegerField()
     created_at  =   models.DateTimeField(auto_now_add=True)
     updated_at  =   models.DateTimeField(auto_now=True)
     userManager =   UserManager()
-
-class Product(models.Model):
-    name        =   models.CharField(max_length=60)
-    description =   models.TextField(max_length=1000)
-    image       =   models.CharField(max_length=100)
-    price       =   models.DecimalField(max_digits=5,decimal_places=2)
-    #category    =   models.CharField(max_length=60)
-    quantity    =   models.IntegerField(default=0)
-    created_at  =   models.DateTimeField(auto_now_add=True)
-    updated_at  =   models.DateTimeField(auto_now=True)
-    productManager = ProductManager()
 
 class Category(models.Model):
     name        =   models.CharField(max_length=60)
     created_at  =   models.DateTimeField(auto_now_add=True)
     updated_at  =   models.DateTimeField(auto_now=True)
-    products    =   models.ManyToManyField(Product, related_name='product_categories')
+
+class Product(models.Model):
+    name        =   models.CharField(max_length=60)
+    description =   models.TextField(max_length=1000)
+    image       =   models.ImageField(upload_to = 'pic_folder/', default = 'pic_folder/None/no-img.jpg')
+    price       =   models.DecimalField(max_digits=5,decimal_places=2)
+    quantity    =   models.IntegerField(default=0)
+    created_at  =   models.DateTimeField(auto_now_add=True)
+    updated_at  =   models.DateTimeField(auto_now=True)
+    category    =   models.ForeignKey(Category, related_name="product_category", default=None)
+    productManager = ProductManager()
 
 class Order(models.Model):
     products    =   models.ManyToManyField(Product, related_name="product_orders")
     user        =   models.ForeignKey(User, related_name="user_orders")
-    # shipping address
-    ####
+    s_fname     =   models.CharField(max_length=60, default=None)
+    s_lname     =   models.CharField(max_length=60, default=None)
     total       =   models.DecimalField(max_digits=5,decimal_places=2)
     status      =   models.IntegerField(default=0)
     created_at  =   models.DateTimeField(auto_now_add=True)
