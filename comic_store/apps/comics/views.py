@@ -67,10 +67,24 @@ def index(request):
         request.session['product_ids'] = {}
 
     # User.userManager.create(
-    # email       =   "ptamayo4@gmail.com",
+    # email       =   "brian@gmail.com",
     # password    =   "12345678",
-    # first_name  =   "Patrick",
-    # last_name   =   "Tamayo",
+    # first_name  =   "Brian",
+    # last_name   =   "Sung",
+    # admin_auth  =   True
+    # )
+    # User.userManager.create(
+    # email       =   "james@gmail.com",
+    # password    =   "12345678",
+    # first_name  =   "James",
+    # last_name   =   "Sanders",
+    # admin_auth  =   True
+    # )
+    # User.userManager.create(
+    # email       =   "kerub@gmail.com",
+    # password    =   "12345678",
+    # first_name  =   "kerub",
+    # last_name   =   "Q",
     # admin_auth  =   True
     # )
 
@@ -83,7 +97,6 @@ def index(request):
     # Category.objects.create(
     #     name = 'Samurai'
     # )
-
     context = {
     "products":Product.productManager.all()
     }
@@ -194,7 +207,7 @@ def display_test(request):
             'order_products': the_order.products.all()
             }
     return render(request, 'comics/product_test.html', context)
-  
+
 def product_edit(request, product_id):
     context = {
     "product": Product.productManager.get(id=product_id),
@@ -268,4 +281,3 @@ def charge_process(request,order_id):
 # ===================== #
 # === END OF STRIPE === #
 # ===================== #
-
