@@ -55,6 +55,8 @@ def index(request):
     # category    =   "Superhero",
     # quantity    =   42
     # )
+    if 'product_ids' not in request.session:
+        request.session['product_ids'] = {}
     context = {
     "products":Product.productManager.all()
     }
@@ -135,3 +137,23 @@ def product_adder(request):
             messages.success(request, "Successfully added product!")
             return redirect('/dashboard/products')
     return redirect('/dashboard/products')
+
+def display_test(request):
+    # stop creating the the best product
+    #Product.productManager.create(name='Superman 1 1939', description='Worth over a million dollars', image='superman', price=100.00, quantity=1)
+
+    # stop creating the user
+    #User.userManager.create(first_name='Brian', last_name='Sung', email='thisiscool@gmail.com', password='Thisisapassword')
+
+    #the_user = User.userManager.get(id=2)
+    the_order = Order.orderManager.get(id=1)
+    the_product = Product.productManager.get(id=10)
+    #the_order = Order.orderManager.create(s_fname='Dan', s_lname='Smith', total=4.00, user=the_user, status=0)
+    the_order.products.add(the_product)
+    the_order.save()
+    context = {
+            'order': the_order,
+            'products': Product.productManager.all(),
+            'order_products': the_order.products.all()
+            }
+    return render(request, 'comics/product_test.html', context)
