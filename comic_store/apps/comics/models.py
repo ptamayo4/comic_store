@@ -42,60 +42,60 @@ class UserManager(models.Manager):
     def user_registration(self, post_data):
         error_msgs = []
         u_fname = post_data['u_fname']
-            u_lname = post_data['u_lname']
-            u_email = post_data['u_email']
-            u_pw = post_data['u_pw']
-            u_confirm_pw = post_data['u_confirm_pw']
-            u_addr_street = post_data['u_addr_street']
-            u_street_two = post_data['u_street_two']
-            u_addr_city = post_data['u_addr_city']
-            u_addr_state = post_data['u_addr_state']
-            u_addr_zip = post_data['u_addr_zip']
-            if len(u_fname) < 1:
-                error_msgs.append('First name field is blank')
-            elif len(u_fname) < 2:
-                error_msgs.append('First name is too short')
-            elif not NAME_REGEX.match(u_fname):
-                error_msgs.append('First name field is blank')
-            if len(u_lname) < 1:
-                error_msgs.append('Last name field is blank')
-            elif len(u_lname) < 2:
-                error_msgs.append('Last name is too short')
-            elif not NAME_REGEX.match(u_lname):
-                error_msgs.append('Last name field is blank')
-            if len(u_email) < 1:
-                error_msgs.append('Email address field is blank')
-            elif not EMAIL_REGEX.match(u_email):
-                error_msgs.append('Invalid email address')
-            if len(u_pw) < 1:
-                error_msgs.append('Password field is blank')
-            elif len(u_pw) < 8:
-                error_msgs.append('Password must be 8 characters or longer')
-            if u_pw != u_confirm_pw:
-                error_msgs.append('Passwords do not match')
-            if len(u_addr_street) < 1:
-                error_msgs.append('Address field is blank')
-            elif not STREET_ADDRESS_REGEX.match(u_addr_street):
-                error_msgs.append('Invalid street address')
-            if len(u_addr_city) < 1:
-                error_msgs.append('City field is blank')
-            # u_addr_city regex
-            elif not NAME_REGEX.match(u_addr_city):
-                error_msgs.append('Invalid city name')
-            if len(u_addr_state) < 1:
-                error_msgs.append('State field is blank')
-            # u_addr_state regex
-            if len(u_addr_zip) < 1:
-                error_msgs.append('Zip code field is blank')
-            # u_addr_zip regex
-            if error_msgs:
-                return {'errors': error_msgs}
-            else:
-                pw = u_pw.encode('utf-8')
-                hashed = bcrypt.hashpw(pw, bcrypt.gensalt())
-                user_location = Location.objects.create(addr_street=u_addr_street, street_two=u_street_two, addr_city=u_addr_city, addr_state=u_addr_state, addr_zip=u_addr_zip)
-                the_user = User.objects.create(first_name=u_fname, last_name=u_lname, email=u_email, password=hashed, user_location=user_location)
-                return {'the_user': the_user}
+        u_lname = post_data['u_lname']
+        u_email = post_data['u_email']
+        u_pw = post_data['u_pw']
+        u_confirm_pw = post_data['u_confirm_pw']
+        u_addr_street = post_data['u_addr_street']
+        u_street_two = post_data['u_street_two']
+        u_addr_city = post_data['u_addr_city']
+        u_addr_state = post_data['u_addr_state']
+        u_addr_zip = post_data['u_addr_zip']
+        if len(u_fname) < 1:
+            error_msgs.append('First name field is blank')
+        elif len(u_fname) < 2:
+            error_msgs.append('First name is too short')
+        elif not NAME_REGEX.match(u_fname):
+            error_msgs.append('First name field is blank')
+        if len(u_lname) < 1:
+            error_msgs.append('Last name field is blank')
+        elif len(u_lname) < 2:
+            error_msgs.append('Last name is too short')
+        elif not NAME_REGEX.match(u_lname):
+            error_msgs.append('Last name field is blank')
+        if len(u_email) < 1:
+            error_msgs.append('Email address field is blank')
+        elif not EMAIL_REGEX.match(u_email):
+            error_msgs.append('Invalid email address')
+        if len(u_pw) < 1:
+            error_msgs.append('Password field is blank')
+        elif len(u_pw) < 8:
+            error_msgs.append('Password must be 8 characters or longer')
+        if u_pw != u_confirm_pw:
+            error_msgs.append('Passwords do not match')
+        if len(u_addr_street) < 1:
+            error_msgs.append('Address field is blank')
+        elif not STREET_ADDRESS_REGEX.match(u_addr_street):
+            error_msgs.append('Invalid street address')
+        if len(u_addr_city) < 1:
+            error_msgs.append('City field is blank')
+        # u_addr_city regex
+        elif not NAME_REGEX.match(u_addr_city):
+            error_msgs.append('Invalid city name')
+        if len(u_addr_state) < 1:
+            error_msgs.append('State field is blank')
+        # u_addr_state regex
+        if len(u_addr_zip) < 1:
+            error_msgs.append('Zip code field is blank')
+        # u_addr_zip regex
+        if error_msgs:
+            return {'errors': error_msgs}
+        else:
+            pw = u_pw.encode('utf-8')
+            hashed = bcrypt.hashpw(pw, bcrypt.gensalt())
+            user_location = Location.objects.create(addr_street=u_addr_street, street_two=u_street_two, addr_city=u_addr_city, addr_state=u_addr_state, addr_zip=u_addr_zip)
+            the_user = User.objects.create(first_name=u_fname, last_name=u_lname, email=u_email, password=hashed, user_location=user_location)
+            return {'the_user': the_user}
 
 
 class OrderManager(models.Manager):
