@@ -7,6 +7,7 @@ from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 from forms import SalePaymentForm
 from django.views.decorators.csrf import csrf_exempt
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import re
 NO_LET_REGEX = re.compile(r'^-?[0-9]+$')
 def add_test(request):
@@ -194,7 +195,7 @@ def display_test(request):
             'order_products': the_order.products.all()
             }
     return render(request, 'comics/product_test.html', context)
-  
+
 def product_edit(request, product_id):
     context = {
     "product": Product.productManager.get(id=product_id),
@@ -268,4 +269,3 @@ def charge_process(request,order_id):
 # ===================== #
 # === END OF STRIPE === #
 # ===================== #
-

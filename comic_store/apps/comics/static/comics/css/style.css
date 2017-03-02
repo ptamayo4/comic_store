@@ -1,6 +1,6 @@
 *{
   margin: 0px auto;
-  outline: 1px dotted red;
+  /*outline: 1px dotted red;*/
   font-family: sans-serif;
   /*background-image: image("temp_blue_background_web.png");*/
   color: white;
@@ -26,16 +26,24 @@
 #nav{
 background-image: linear-gradient(to right, red, transparent)
 }
+
 #nav > h1{
   color:white;
   display:inline-block;
   margin:10px 0px 10px 30px;
   font-size:30px;
 }
-#nav > a{
+
+#shopping_cart_nav{
   float:right;
   color:white;
-  margin:15px 0;
+  margin:15px 0 15px 30px;
+}
+
+#index_link{
+  height: 50px;
+  width: auto;
+  margin: 0px 0px 0px 25px;
 }
 
 /****************************/
@@ -131,7 +139,7 @@ height: 60px;
 
 #products_console_1{
   display: inline-block;
-  width: 300px;
+  width: 20%;
   height: 300px;
   margin: 30px 0px 7px 30px;
   padding: 10px 0px 0px 10px;
@@ -142,7 +150,7 @@ height: 60px;
 #products_console_2{
   display: inline-block;
   vertical-align: top;
-  width: 1300px;
+  width: 74%;
   height: 700px;
   margin: 30px 0px 7px 10px;
   padding: 10px 10px 10px 10px;
@@ -251,6 +259,12 @@ select{
   position: relative;
   top: 0px;
   left: 93px;
+}
+
+#add_to_cart_button{
+  margin-top: 2px;
+  padding:1px;
+  background-image: linear-gradient(to right, goldenrod, transparent);
 }
 
 button{
@@ -467,7 +481,7 @@ option{
   width: 800px;
   height: 552px;
   margin: 30px 0px 7px 0px;
-  padding: 10px 10px 10px 10px;
+  padding: 10px 0px 10px 10px;
   font-weight: bold;
   border-left: 2px solid white;
   border-bottom: 1px dotted white;
@@ -534,7 +548,7 @@ option{
 
 #my_cart{
   position: relative;
-  left: 601px;
+  left: 18%;
   border: 1px solid white;
   height: 500px;
   width: 700px;
@@ -556,7 +570,7 @@ option{
 
 #display_cart_button{
   position: relative;
-  left: 1600px;
+  left: 75%;
 }
 
 #check_out_click{
