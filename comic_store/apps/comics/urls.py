@@ -22,7 +22,11 @@ urlpatterns = [
     url(r'^display_test$', views.display_test),
     url(r'^charge/(?P<order_id>\d+)$', views.charge, name="charge"),
     url(r'^charge/(?P<order_id>\d+)/process$', views.charge_process),
-    url(r'product_edit/(?P<product_id>\d+)$', views.product_edit),
-    url(r'product_delete/(?P<product_id>\d+)$', views.product_delete),
-    url(r'product_update/(?P<product_id>\d+)$', views.product_update)
+    url(r'^product_edit/(?P<product_id>\d+)$', views.product_edit),
+    url(r'^product_delete/(?P<product_id>\d+)$', views.product_delete),
+    url(r'^product_update/(?P<product_id>\d+)$', views.product_update),
+    #url(r'create_order/(?P<order_id>\d+)$', views.create_order)
+    url(r'^user_register$', views.user_registration),
+    url(r'^user_login$', views.user_login),
+    url(r'^checkout$', views.display_login_registration),
 ]

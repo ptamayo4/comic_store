@@ -174,6 +174,31 @@ def product_adder(request):
             return redirect('/dashboard/products')
     return redirect('/dashboard/products')
 
+def display_login_registration(request):
+    return render(request, 'comics/login_register.html')
+
+def user_registration(request):
+    if request.method == 'POST':
+        user = User.userManager.user_registration(request.POST)
+        if 'errors' in user:
+            for error in user['errors']:
+                messages.error(request, error)
+            return redirect('/shopping_cart')
+        if 'the_user' in user:
+            messages.success(request, "Successfully registered")
+            return redirect('/shopping_cart')
+
+def user_login(request):
+    if request.method == 'POST':
+        # get order id somehow
+        existing_user = User.userManager.validate_login(request.POST)
+        if 'error' in existing_user:
+            messages.error(request, existing_user['error'])
+            return redirect('/shopping_cart')
+        if 'logged_in_user' in existing_user:
+            the_order = Order.orderManager.create_order
+            messages.success(request, existing_user['logged_in_user'].first_name+', enter your credit card information to complete your order!')
+            return redirect('/charge')
 
 def display_test(request):
     # stop creating the the best product
@@ -184,17 +209,17 @@ def display_test(request):
 
     #the_user = User.userManager.get(id=2)
     the_order = Order.orderManager.get(id=1)
-    the_product = Product.productManager.get(id=10)
+    #the_product = Product.productManager.get(id=10)
     #the_order = Order.orderManager.create(s_fname='Dan', s_lname='Smith', total=4.00, user=the_user, status=0)
-    the_order.products.add(the_product)
-    the_order.save()
+    #the_order.products.add(the_product)
+    #the_order.save()
     context = {
             'order': the_order,
             'products': Product.productManager.all(),
             'order_products': the_order.products.all()
             }
     return render(request, 'comics/product_test.html', context)
-  
+
 def product_edit(request, product_id):
     context = {
     "product": Product.productManager.get(id=product_id),

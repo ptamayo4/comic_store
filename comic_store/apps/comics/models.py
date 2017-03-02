@@ -100,17 +100,7 @@ class UserManager(models.Manager):
 
 class OrderManager(models.Manager):
     def create_order(self, post_data, product_ids):
-        # create user based on billing information
         product_total = 0
-        #u_fname = post_data['u_fname']
-        #u_lname = post_data['u_lname']
-        #u_addr_street = post_data['u_addr_street']
-        #u_street_two = post_data['u_street_two']
-        #u_addr_city = post_data['u_addr_city']
-        #u_addr_state = post_data['u_addr_state']
-        #u_addr_zip = post_data['u_addr_zip']
-        #user_location = Location.objects.create(addr_street=u_addr_street, street_two=u_street_two, addr_city=u_addr_city, addr_state=u_addr_state, addr_zip=u_addr_zip)
-        #the_user = User.userManager.create(first_name=u_fname, last_name=u_lname, user_location=user_location)
         # shipping information
         s_fname = post_data['s_fname']
         s_lname = post_data['s_lname']
