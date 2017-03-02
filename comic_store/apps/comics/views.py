@@ -1,9 +1,14 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, render_to_response
+from django.http import HttpResponse
+from django.template import RequestContext
 from models import *
 from django.contrib import messages
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
-
+from forms import SalePaymentForm
+from django.views.decorators.csrf import csrf_exempt
+import re
+NO_LET_REGEX = re.compile(r'^-?[0-9]+$')
 def add_test(request):
     # ============== #
     # ADD QUERY HERE #
@@ -165,7 +170,7 @@ def product_adder(request):
             messages.success(request, "Successfully added product!")
             return redirect('/dashboard/products')
     return redirect('/dashboard/products')
-
+  
 def product_edit(request, product_id):
     context = {
     "product": Product.productManager.get(id=product_id),
@@ -183,3 +188,60 @@ def product_update(request, product_id):
     if request.method=="POST":
         update_product = Product.productManager.update_product(request.POST, product_id)
     return redirect('/dashboard/products')
+
+# ============== #
+# === STRIPE === #
+# ============== #
+@csrf_exempt
+def charge(request,order_id):
+    context = {
+        'order_id' : order_id
+    }
+    # if 'total' not in request.session:
+    #     request.session['total'] = 300
+    # request.session['total'] = 4000
+    # # the_amount = request.session['total']
+    # # print the_amount
+    # if request.method == "POST":
+    #     # total = charge_me(10000)
+    #     form = SalePaymentForm(request.POST)
+    #
+    #     if form.is_valid(): # charges the card
+    #         sale = Sale()
+    #         sale.charge(100000,4242424242424242,01,2019,424)
+    #         return HttpResponse("Success! We've charged your card!")
+    # else:
+    #     form = SalePaymentForm()
+
+    return render(request , "includes/card.html" , context)
+
+def charge_process(request,order_id):
+    if request.method == 'POST':
+        # sale = sale()
+        # card = sale.validate_card(request.POST)
+        if not NO_LET_REGEX.match(request.POST['number']):
+            # error.msgs.append('Card Number invalid')
+            messages.error(request,'Card Number invalid')
+            return redirect('/charge/' + str(order_id))
+        if len(request.POST['number']) != 16:
+            # error.msgs.append('Card number invalid')
+            messages.error(request,'Card number invalid')
+            return redirect('/charge/' + str(order_id))
+        if len(request.POST['cvc']) != 3:
+            # error.msgs.append('CVC is invalid')
+            messages.error(request,'CVC is invalid')
+            return redirect('/charge/' + str(order_id))
+
+        # if 'errors' in card:
+        #     for error in card['errors']:
+        #         messages.error(request,error)
+        #     return redirect('/charge/' + str(order_id))
+        # if 'validated_card' in card:
+        sale = Sale()
+        sale.charge(99999999,request.POST['number'],request.POST['exp_month'],request.POST['exp_year'],request.POST['cvc'])
+        return redirect('/')
+
+# ===================== #
+# === END OF STRIPE === #
+# ===================== #
+

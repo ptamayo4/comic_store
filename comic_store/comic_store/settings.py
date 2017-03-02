@@ -122,3 +122,5 @@ USE_TZ = True
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+STRIPE_API_KEY = "sk_test_5HJSvP0XKmzN122N5ntJ3zfM"
