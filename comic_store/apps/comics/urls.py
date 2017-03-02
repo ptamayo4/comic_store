@@ -18,5 +18,11 @@ urlpatterns = [
     url(r'^product_spotlight/$', views.product_spotlight),
     # url(r'^product_spotlight/(?P<product_id>\d+)$', views.product_spotlight),
     url(r'^shopping_cart$', views.shopping_cart),
-    url(r'product_adder$', views.product_adder)
+    url(r'product_adder$', views.product_adder),
+    url(r'^display_test$', views.display_test)
+    url(r'^charge/(?P<order_id>\d+)$', views.charge, name="charge"),
+    url(r'^charge/(?P<order_id>\d+)/process$', views.charge_process),
+    url(r'product_edit/(?P<product_id>\d+)$', views.product_edit),
+    url(r'product_delete/(?P<product_id>\d+)$', views.product_delete),
+    url(r'product_update/(?P<product_id>\d+)$', views.product_update)
 ]

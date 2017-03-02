@@ -14,6 +14,11 @@
             <li id="logoff"><a class="header_link" href = '#'>Log Off</a></li>
         </ul>
         <h1>Products</h1>
+        {% if messages %}
+            {% for message in messages %}
+                <h2>{{ message }}</h2>
+            {% endfor %}
+        {% endif %}
         <form>
             Search<input type="text" name="prodsearch">
         </form>
@@ -26,14 +31,23 @@
           <div class="modal-content">
             <span class="close">&times;</span>
             <h3>Add Product</h3>
-            <form action="product_adder" method="POST">
+            <form action="product_adder" method="POST" enctype='multipart/form-data'>
                 {% csrf_token %}
-                <p class="addtext">Name <input type="text" name="name"></p>
+                <p class="addtext">Name <input type="text" name="p_name"></p>
                 <p class="addtext">Description </p>
-                <p class="addtext"><textarea name="description"></textarea>
-                <p class="addtext">Categories <input type="text" name="category"></p>
-                <p class="addtext">Price <input type="number" step="0.01" name="price"></p>
-                <p class="addtext">Quantity <input type="number" name="quantity"></p>
+                <p class="addtext"><textarea name="p_description"></textarea>
+                {% if categories %}
+                    <p>Category<select name="p_category">
+                        {% for category in categories %}
+                            <option value="{{category.name}}">{{category.name}}</option>
+                        {% endfor %}
+                </select></p>
+                <h4>or</h4>
+                {% endif %}
+                <p class="addtext">New Category<input type="text" name="new_p_category"></p>
+                <p class="addtext">Price <input type="number" step="0.01" name="p_price"></p>
+                <p class="addtext">Quantity <input type="number" name="p_quantity"></p>
+                <p>Image Upload<input type="file" name="image"/></p>
                 <input type="submit" value="Add Product">
             </form>
           </div>
@@ -56,23 +70,27 @@
             }
         }
         </script>
+
+
         <table id="products_table">
             <th>Picture</th>
             <th>ID</th>
             <th>Name</th>
             <th>Inventory Count</th>
+            <th>Category</th>
             <th>Quantity Sold</th>
             <th>Action</th>
-            {% for product in products %}
+            {% for product in products.all %}
             <tr>
-                <td>{{product.image}}</td>
+                <td><img src="{{product.image.url}}" style="height:150px;width:100px;"></td>
                 <td>{{product.id}}</td>
                 <td>{{product.name}}</td>
                 <td>{{product.quantity}}</td>
-                <td>1000</td> <!-- NEED TO CHANGE -->
-                <td><a href='#'>edit</a>    <a href='#'>delete</a></td>
+                <td>{{product.category.name}}</td>
+                <td>0</td> <!-- NEED TO CHANGE -->
+                <td><a href='product_edit/{{product.id}}'>edit</a> <a href='product_delete/{{product.id}}'>delete</a></td>
             </tr>
             {% endfor %}
-        </table>
+            </table>
     </body>
 </html>
