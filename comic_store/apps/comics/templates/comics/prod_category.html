@@ -18,7 +18,7 @@
   <body id="bg" style="background-image: url('{% static '/comics/images/backgrounds/temp_blue_background_web.png' %}'); width: 100%";>
     {% include 'includes/nav.html'%}
     <div id="wrapper">
-      <h1 id="products_main_title">{{category.page}} Showcase</h1>
+      <h1 id="products_main_title">{{category.name}} Showcase</h1>
 
 <!-- __Search Form -->
       <div id="products_console_1">
@@ -38,14 +38,14 @@
         <a id="show_all_products_link" href="/products_main">Show All</a>
       </div>
       <div id="products_console_2">
-        <form id="product_navigation" action="#" method="post">
+        <!-- <form id="product_navigation" action="#" method="post">
           {% csrf_token %}
           Comics Sorted by: <select id="product_selection_drop_down">
             <option value="">Price</option>
             <option value="">Category</option>
             <option value="">Most Popular</option>
           </select>
-        </form>
+        </form> -->
 
 
 <!-- __Product Display -->
