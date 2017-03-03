@@ -8,6 +8,7 @@ from django.core.files.storage import FileSystemStorage
 from forms import SalePaymentForm
 from django.views.decorators.csrf import csrf_exempt
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.db.models import Count
 import re
 NO_LET_REGEX = re.compile(r'^-?[0-9]+$')
 def add_test(request):
@@ -67,7 +68,8 @@ def index(request):
     #print the_product
     if 'product_ids' not in request.session:
         request.session['product_ids'] = {}
-
+    if 'user_id' not in request.session:
+        request.session['user_id'] = 'null'
     # User.userManager.create(
     # email       =   "brian@gmail.com",
     # password    =   "12345678",
@@ -207,7 +209,7 @@ def products_main(request):
 
     context={
         "products" : products,
-        "categories" : Category.objects.all()
+        "categories" : Category.objects.annotate(sum_prod=Count('product_category')).filter(sum_prod__gt=0)
     }
 
     return render(request, 'comics/products_main.html', context)
@@ -229,7 +231,7 @@ def product_category(request,category_id):
 
     context = {
         'products' : Product.productManager.filter(category__id= category_id),
-        'categories': Category.objects.all()
+        'categories': Category.objects.annotate(sum_prod=Count('product_category')).exclude(sum_prod__lt=1)
     }
 
     return render(request,'comics/prod_category.html', context)
@@ -295,11 +297,10 @@ def user_login(request):
         existing_user = User.userManager.validate_login(request.POST)
         if 'error' in existing_user:
             messages.error(request, existing_user['error'])
-            return redirect('/shopping_cart')
+            return redirect('/')
         if 'logged_in_user' in existing_user:
-            the_order = Order.orderManager.create_order
-            messages.success(request, existing_user['logged_in_user'].first_name+', enter your credit card information to complete your order!')
-            return redirect('/charge')
+            request.session['user_id'] = existing_user.id
+            return redirect('/')
 
 
 def display_test(request):
