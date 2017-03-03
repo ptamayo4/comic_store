@@ -134,6 +134,12 @@ def admin_login(request):
             return render(request, 'comics/admin_main.html', context)
     return redirect('/admin')
 
+def admin_logout(request):
+    if 'auth' in request.session:
+        del request.session['auth']
+        del request.session['id']
+    return redirect('/admin')
+
 def register(request):
     if request.method=="POST":
         User.userManager.create(
@@ -149,8 +155,29 @@ def register(request):
         # addr_zip    =   request.POST['addr_zip']
         )
     return redirect('/admin')
-
+####ADMIN PRODUCTS#######
 def product_view(request):
+<<<<<<< HEAD
+    if 'auth' in request.session:
+        product_list = Product.productManager.all()
+        paginator = Paginator(product_list, 5)
+
+        page = request.GET.get('page')
+        try:
+            products = paginator.page(page)
+        except PageNotAnInteger:
+            # If page is not an integer, deliver first page.
+        	products = paginator.page(1)
+        except EmptyPage:
+            # If page is out of range (e.g. 9999), deliver last page of results.
+        	products = paginator.page(paginator.num_pages)
+        context = {
+        	'products': products,
+        }
+        return render(request, 'comics/admin_products.html', context)
+    else:
+        return redirect('/')
+=======
     context = {
     "products":Product.productManager.all(),
     "categories": Category.objects.all()
@@ -162,9 +189,13 @@ def product_view(request):
 
     return render(request, 'products_main.html', context)
 
+>>>>>>> 085764dc11b777bbbfe6e127ed931075664b296e
 
 def orders_view(request):
-    return render(request, 'comics/admin_orders.html')
+    context = {
+    "orders": Order.orderManager.all()
+    }
+    return render(request, 'comics/admin_orders.html', context)
 
 def products_main(request):
     if 'cart' not in request.session:
@@ -240,6 +271,20 @@ def product_adder(request):
             return redirect('/dashboard/products')
     return redirect('/dashboard/products')
 
+<<<<<<< HEAD
+def admin_users(request):
+    context = {
+    "users": User.userManager.all()
+    }
+    return render(request, 'comics/users.html', context)
+
+def user_update(request):
+    # if request.method == "POST":
+    #     for item in request.POST:
+    #         print item['value']
+    return redirect('/dashboard/users')
+
+=======
 def display_login_registration(request):
     return render(request, 'comics/login_register.html')
 
@@ -265,6 +310,7 @@ def user_login(request):
             the_order = Order.orderManager.create_order
             messages.success(request, existing_user['logged_in_user'].first_name+', enter your credit card information to complete your order!')
             return redirect('/charge')
+>>>>>>> 085764dc11b777bbbfe6e127ed931075664b296e
 
 def display_test(request):
     # stop creating the the best product
