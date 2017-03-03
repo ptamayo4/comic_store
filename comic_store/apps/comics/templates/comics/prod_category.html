@@ -31,7 +31,7 @@
         <ul id="categories">
 
           {%for category in categories%}
-            <li><a href='/product/category/{{category.id}}'>{{category.name}} ( {{category.products.count}} )</a></li>
+            <li><a href='/product/category/{{category.id}}'>{{category.name}} ( {{category.product_category.count}} )</a></li>
           {%endfor%}
 
         </ul>
@@ -92,7 +92,7 @@
 
     <!-- __Cart View -->
 
-    <div id="cart_view">
+    <!-- <div id="cart_view">
       <div id="display_cart_button">
         Click to Toggle View Cart<img id="my_cart_img" src="{% static 'comics/images/navigation/shopping_cart.png' %}" alt="Shopping Cart Image">
       </div>
@@ -117,6 +117,6 @@
         <a href="/shopping_cart"><p id="check_out_click">Click for Checkout</p></a>
         </div>
       </div>
-    </div>
+    </div> -->
   </body>
 </html>

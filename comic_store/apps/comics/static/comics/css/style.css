@@ -5,7 +5,10 @@
   /*background-image: image("temp_blue_background_web.png");*/
   color: white;
 }
-
+html,body{
+  width:100%;
+  height:100%;
+}
 #cover{
   /*background-image: image("temp_blue_background_2_web.png");*/
   /*background-size: cover;*/
@@ -38,6 +41,7 @@ background-image: linear-gradient(to right, red, transparent)
   float:right;
   color:white;
   margin:15px 0 15px 30px;
+  cursor:pointer;
 }
 
 #index_link{
@@ -546,8 +550,10 @@ option{
 /****************************/
 
 #cart_view{
-  position: relative;
-  bottom: 822px;
+  position: absolute;
+  top: 11.5%;
+  right: 11%;
+  z-index: 9999999;
 }
 
 #my_cart{
@@ -557,7 +563,7 @@ option{
   height: 500px;
   width: 700px;
   color: white;
-  background-color: rgba(255, 0, 0, .5);
+  background-color: rgba(255, 0, 0, .7);
 }
 
 #my_cart th{
@@ -696,11 +702,20 @@ option{
   width:100%;
   display:block;
   margin:20px 0;
-  font-size:25px;
+  font-size:20px;
   background:transparent;
   border:0;
   font-weight: 300;
   text-align: center;
+  border-bottom:1px solid transparent;
+  transition:all 0.5s ease;
+  -webkit-transition: all 0.5s ease;
+  -o-transition: all 0.5s ease;
+  -moz-transition: all 0.5s ease;
+}
+#log_reg-con input:focus{
+  outline:0;
+  border-bottom:1px solid white;
 }
 #log_reg-con input[type='submit']{
   font-size: 17px;
