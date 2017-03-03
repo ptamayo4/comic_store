@@ -41,7 +41,7 @@
         <ul id="categories">
 
           {%for category in categories%}
-            <li><a href='/product/category/{{category.id}}'>{{category.name}} ( {{category.count}} )</a></li>
+            <li><a href='/product/category/{{category.id}}'>{{category.name}} ( {{category.product_category.count}} )</a></li>
           {%endfor%}
           <!-- <li>Comics {{ comics_inventory }}</li>
           <li>Graphic Novels {{ graphic_novels_inventory }}</li>
