@@ -32,6 +32,8 @@ urlpatterns = [
     url(r'product_edit/(?P<product_id>\d+)$', views.product_edit),
     url(r'product_delete/(?P<product_id>\d+)$', views.product_delete),
     url(r'product_update/(?P<product_id>\d+)$', views.product_update),
+    url(r'order_update/(?P<order_id>\d+)$', views.order_update),
+    url(r'order_delete/(?P<order_id>\d+)$', views.order_delete),
     #url(r'create_order/(?P<order_id>\d+)$', views.create_order)
     url(r'^user_register$', views.user_registration),
     url(r'^user_login$', views.user_login),

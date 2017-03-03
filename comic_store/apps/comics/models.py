@@ -99,8 +99,7 @@ class UserManager(models.Manager):
 
 
 class OrderManager(models.Manager):
-    def create_order(self, post_data, user_id, shopping_cart):
-        error_msgs = []
+    def create_order(self, post_data, product_ids):
         product_total = 0
         # shipping information
         s_fname = post_data['s_fname']
@@ -110,46 +109,17 @@ class OrderManager(models.Manager):
         s_addr_city = post_data['s_addr_city']
         s_addr_state = post_data['s_addr_state']
         s_addr_zip = post_data['s_addr_zip']
-        if len(s_fname) < 1:
-            error_msgs.append('First name field is blank')
-        elif len(s_fname) < 2:
-            error_msgs.append('First name is too short')
-        elif not NAME_REGEX.match(s_fname):
-            error_msgs.append('First name field is blank')
-        if len(s_lname) < 1:
-            error_msgs.append('Last name field is blank')
-        elif len(s_lname) < 2:
-            error_msgs.append('Last name is too short')
-        elif not NAME_REGEX.match(s_lname):
-            error_msgs.append('Last name field is blank')
-        if len(s_addr_street) < 1:
-            error_msgs.append('Address field is blank')
-        #elif not STREET_ADDRESS_REGEX.match(s_addr_street):
-            #error_msgs.append('Invalid street address')
-        if len(s_addr_city) < 1:
-            error_msgs.append('City field is blank')
-        # u_addr_city regex
-        elif not NAME_REGEX.match(s_addr_city):
-            error_msgs.append('Invalid city name')
-        # u_addr_state regex
-        if len(s_addr_zip) < 1:
-            error_msgs.append('Zip code field is blank')
-        # u_addr_zip regex
-        if error_msgs:
-            return {'errors': error_msgs}
-        else:
-            shipping_location = Location.objects.create(addr_street=s_addr_street, street_two=s_street_two, addr_city=s_addr_city, addr_state=s_addr_state, addr_zip=s_addr_zip)
-            the_user = User.userManager.get(id=user_id)
-            the_order = Order.orderManager.create(s_fname=s_fname, s_lname=s_lname, user=the_user, shipping_location=shipping_location)
-            the_order.user.add(the_user)
-            for product in shopping_cart:
-                # add product to order object
-                the_product = Product.productManager.get(id=product.id)
-                product_total += the_product.price
-                the_order.products.add(the_product)
-            # depending on what we return, change this following line
-            the_order.total.add(product_total)
-            return {'the_order': the_order}
+        shipping_location = Location.objects.create(addr_street=s_addr_street, street_two=s_street_two, addr_city=s_addr_city, addr_state=s_addr_state, addr_zip=s_addr_zip)
+        the_order = Order.orderManager.create(s_fname=s_fname, s_lname=s_lname, user=the_user)
+        the_order.user.add(the_user)
+        for product_id in product_ids:
+            # add product to order object
+            the_product = Product.productManager.get(id=product_id)
+            product_total += the_product.price
+            the_order.products.add(the_product)
+        # depending on what we return, change this following line
+        the_order.total.add(product_total)
+        return {'the_order': the_order}
 
 class ProductManager(models.Manager):
     def validate_product(self, post_data, submitted_image):
@@ -230,7 +200,7 @@ class Category(models.Model):
 class Product(models.Model):
     name        =   models.CharField(max_length=60)
     description =   models.TextField(max_length=1000)
-    image       =   models.ImageField(upload_to = 'pic_folder/', default = 'pic_folder/default.jpg')
+    image       =   models.ImageField(upload_to = 'pic_folder/', default = 'pic_folder/None/no-img.jpg')
     #price       =   models.DecimalField(max_digits=5,decimal_places=2)
     price       =   models.IntegerField(default=0)
     quantity    =   models.IntegerField(default=0)
@@ -252,7 +222,7 @@ class Order(models.Model):
 
 class Location(models.Model):
     addr_street =   models.CharField(max_length=100)
-    street_two  =   models.CharField(max_length=100, default=None)
+    street_two  =   models.CharField(max_length=100)
     addr_city   =   models.CharField(max_length=100)
     addr_state  =   models.CharField(max_length=20)
     addr_zip    =   models.IntegerField()

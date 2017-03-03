@@ -305,7 +305,7 @@ def product_spotlight(request, product_id):
     category_id = product.category_id
     context = {
         "the_product": product,
-        "prod_total": request.session['product_total']
+        "prod_total": request.session['product_total'],
         "products": Product.productManager.filter(category__id= category_id)
     }
     return render(request, 'comics/product_spotlight.html', context)
@@ -514,3 +514,18 @@ def order_success(request):
     return render(request,'comics/success.html')
 def register_me(request):
     return render(request,'comics/reg.html')
+
+def order_update(request, order_id):
+    if 'auth' in request.session:
+        if request.method == "POST":
+            Order.orderManager.filter(id=order_id).update(status=request.POST['new_status'])
+            return redirect('/dashboard/orders')
+        return redirect('/dashboard/orders')
+
+def order_delete(request, order_id):
+    if 'auth' in request.session:
+        Order.orderManager.get(id=order_id).delete()
+        print "Successfully deleted Order#" + order_id
+        return redirect('/dashboard/orders')
+    else:
+        return redirect('/')
