@@ -110,7 +110,7 @@ class OrderManager(models.Manager):
         s_addr_state = post_data['s_addr_state']
         s_addr_zip = post_data['s_addr_zip']
         shipping_location = Location.objects.create(addr_street=s_addr_street, street_two=s_street_two, addr_city=s_addr_city, addr_state=s_addr_state, addr_zip=s_addr_zip)
-        the_order = Order.orderManager.create(s_fname=s_fname, s_lname=s_lname, user=the_user)
+        the_order = Order.orderManager.create(s_fname=s_fname, s_lname=s_lname, user=the_user, shipping_location=shipping_location)
         the_order.user.add(the_user)
         for product_id in product_ids:
             # add product to order object
@@ -200,7 +200,7 @@ class Category(models.Model):
 class Product(models.Model):
     name        =   models.CharField(max_length=60)
     description =   models.TextField(max_length=1000)
-    image       =   models.ImageField(upload_to = 'pic_folder/', default = 'pic_folder/None/no-img.jpg')
+    image       =   models.ImageField(upload_to = 'pic_folder/', default = 'pic_folder/default.jpg')
     #price       =   models.DecimalField(max_digits=5,decimal_places=2)
     price       =   models.IntegerField(default=0)
     quantity    =   models.IntegerField(default=0)

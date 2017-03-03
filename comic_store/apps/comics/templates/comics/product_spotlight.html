@@ -20,9 +20,9 @@
     <div id="wrapper">
       <h1 id="product_spotlight_title">Item Spotlight</h1>
       <div class="product_spotlight_container">
-        <h1>{{ product.name }}</h1>
+        <h1>{{ the_product.name }}</h1>
         <div class="product_image_container_prime">
-          <img src="{{product.image.url}}" alt="Product Image">
+          <img src="{{the_product.image.url}}" alt="Product Image">
         <!-- </div>
         <div class="product_spotlight_image">
           <img src="#" alt="">
@@ -44,14 +44,16 @@
         </div> -->
       </div>
       <div class="product_description">
-        <h3>{{ product.name }}</h3>
-        <p id="product_description_display">{{product.description}}</p>
+        <h3>{{ the_product.name }}</h3>
+        <p id="product_description_display">{{the_product.description}}</p>
       </div>
       <div id="buy_this_product">
-        <form class="product_price_selection_form" action="#" method="post">
+        <form class="product_price_selection_form" action="/add_cart/{{the_product.id}}" method="post">
           {% csrf_token %}
-          <select class="price_select_dropdown" name="">
-            <option value="">{{ product.price}}</option>
+          <select class="price_select_dropdown" name="product_quantity">
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
             <!-- <option value="">{{ product.price }}</option>
             <option value="">{{ product.price }}</option>
             <option value="">{{ product.price }}</option> -->
@@ -62,16 +64,16 @@
       <div id="similar_products_footer">
         <h3>Similar Products</h2>
           <div id="product_gallery">
-            {% for product in products %}
+            {% for product in products.all %}
             <div class="product_gallery_item">
               <a href="/product_spotlight/{{product.id}}">
               <div class="product_image_holder">
-                  <img class="product-image" class="w3-hover-sepia" src="{{product.image.url}}" alt="{{product.name}} comic picture">
+                <img class="product-image" class="w3-hover-sepia" src="{{product.image.url}}" alt="{{product.name}} comic picture">
               </div>
               <p class="product_price">{{product.price}}</p>
               <p class="product_name">{{product.name}}</p>
               </a>
-              <form class="" action="#" method="post">
+              <form class="" action="/add_cart/{{product.id}}" method="post">
                 <button class="cart_add" type="submit" name="add_to_cart">Add to Cart</button>
               </form>
               <!-- <p id="add_to_cart_button">Add to Cart</p> -->
