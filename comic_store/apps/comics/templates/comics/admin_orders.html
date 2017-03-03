@@ -10,9 +10,13 @@
                 <li>Dashboard</li>
                 <li><a class="header_link" href = '/dashboard/orders'>Orders</a></li>
                 <li><a class="header_link" href = '/dashboard/products'>Products</a></li>
-                <li id="logoff"><a class="header_link" href = '#'>Log Off</a></li>
+                <li><a class="header_link" href = '/dashboard/users'>Users</a></li>
+                <li id="logoff"><a class="header_link" href = 'admin_logout'>Log Off</a></li>
             </ul>
         <h1>Orders</h1>
-        
+        {% for order in orders %}
+            <p>{{order.id}}a</p>
+        {% endfor %}
+
     </body>
 </html>

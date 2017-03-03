@@ -7,6 +7,7 @@ from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 from forms import SalePaymentForm
 from django.views.decorators.csrf import csrf_exempt
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import re
 NO_LET_REGEX = re.compile(r'^-?[0-9]+$')
 def add_test(request):
@@ -121,6 +122,12 @@ def admin_login(request):
             return render(request, 'comics/admin_main.html', context)
     return redirect('/admin')
 
+def admin_logout(request):
+    if 'auth' in request.session:
+        del request.session['auth']
+        del request.session['id']
+    return redirect('/admin')
+
 def register(request):
     if request.method=="POST":
         User.userManager.create(
@@ -136,20 +143,33 @@ def register(request):
         # addr_zip    =   request.POST['addr_zip']
         )
     return redirect('/admin')
-
+####ADMIN PRODUCTS#######
 def product_view(request):
-    context = {
-    "products":Product.productManager.all(),
-    "categories": Category.objects.all()
-    }
-    # print context['categories'][1].name
-    # prodOfCat = Category.objects.filter(products__name="2001")
-    # for product in prodOfCat:
-    #     print product.name
-    return render(request, 'comics/admin_products.html', context)
+    if 'auth' in request.session:
+        product_list = Product.productManager.all()
+        paginator = Paginator(product_list, 5)
+
+        page = request.GET.get('page')
+        try:
+            products = paginator.page(page)
+        except PageNotAnInteger:
+            # If page is not an integer, deliver first page.
+        	products = paginator.page(1)
+        except EmptyPage:
+            # If page is out of range (e.g. 9999), deliver last page of results.
+        	products = paginator.page(paginator.num_pages)
+        context = {
+        	'products': products,
+        }
+        return render(request, 'comics/admin_products.html', context)
+    else:
+        return redirect('/')
 
 def orders_view(request):
-    return render(request, 'comics/admin_orders.html')
+    context = {
+    "orders": Order.orderManager.all()
+    }
+    return render(request, 'comics/admin_orders.html', context)
 
 def products_main(request):
     if 'cart' not in request.session:
@@ -186,6 +206,18 @@ def product_adder(request):
             messages.success(request, "Successfully added product!")
             return redirect('/dashboard/products')
     return redirect('/dashboard/products')
+
+def admin_users(request):
+    context = {
+    "users": User.userManager.all()
+    }
+    return render(request, 'comics/users.html', context)
+
+def user_update(request):
+    # if request.method == "POST":
+    #     for item in request.POST:
+    #         print item['value']
+    return redirect('/dashboard/users')
 
 
 def display_test(request):
