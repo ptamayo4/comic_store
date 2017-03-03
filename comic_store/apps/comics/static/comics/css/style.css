@@ -604,12 +604,11 @@ option{
   cursor: pointer
 }
 .category > div{
-  position: absolute;
-  top: 50%;
-  left: 29%;
-  right: 0;
-  bottom: 0;
-  margin: auto;
+  margin-top: 25%;
+  text-align: center;
+}
+.category p{
+  margin-top:10px;
 }
 #cat1{
   background:rgb(231, 76, 60);
@@ -659,3 +658,68 @@ option{
 /********************/
 /* *** END HOME *** */
 /*******************/
+
+/*********************/
+/* *** CARD PAGE *** */
+/*********************/
+.card_page{
+  width:100%;
+  height:100%;
+  /*background:black;*/
+  position:relative;
+}
+.card_page:before{
+  content: "";
+  background:rgba(0,0,0,0.3);
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top:0;
+  left:0;
+}
+.card_page .inner{
+  width: 366px;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    height: 186px;
+    padding: 90px;
+    border-radius:10px;
+    background: rgba(0,0,0,0.8);
+    box-shadow: 1px 2px 5px 1px black;
+}
+.card_page .inner input{
+  font-size: 20px;
+  width:100%;
+  background: rgba(0, 0, 0, 0);
+  border: 0;
+  margin:20px 0;
+  font-weight: 300;
+}
+.card_page .inner select{
+  width: 43.8%;
+      margin: 10px 0px;
+      font-size:15px;
+}
+#charge-bttn{
+  transition:all 0.6s ease;
+  -webkit-transition:all 0.6s ease;
+  -o-transition: all 0.6s ease;
+  -moz-transition: all 0.6s ease;
+  cursor: pointer
+}
+#charge-bttn:hover{
+  color:green;
+}
+#card-number input{
+  width: 77.3%;
+}
+#card-cvc input{
+  width:20%;
+}
+/********************/
+/* *** END CARD *** */
+/********************/
