@@ -8,6 +8,7 @@ from django.core.files.storage import FileSystemStorage
 from forms import SalePaymentForm
 from django.views.decorators.csrf import csrf_exempt
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.db.models import Count
 import re
 NO_LET_REGEX = re.compile(r'^-?[0-9]+$')
 def add_test(request):
@@ -207,7 +208,7 @@ def products_main(request):
 
     context={
         "products" : products,
-        "categories" : Category.objects.all()
+        "categories" : Category.objects.annotate(sum_prod=Count('product_category')).filter(sum_prod__gt=0)
     }
 
     return render(request, 'comics/products_main.html', context)
@@ -229,7 +230,7 @@ def product_category(request,category_id):
 
     context = {
         'products' : Product.productManager.filter(category__id= category_id),
-        'categories': Category.objects.all()
+        'categories': Category.objects.annotate(sum_prod=Count('product_category')).exclude(sum_prod__lt=1)
     }
 
     return render(request,'comics/prod_category.html', context)
