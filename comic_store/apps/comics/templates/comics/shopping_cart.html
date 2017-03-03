@@ -13,21 +13,83 @@
 <!-- __Information Form -->
       <h1 id="shopping_cart_title">Shopping Cart Portal</h1>
       <div id="checkout_information_form">
-        <form id="checkout_form" action="index.html" method="post">
+        {% if messages %}
+          {% for message in messages %}
+            <p>{{message}}</p>
+          {% endfor %}
+        {% endif %}
+        <form id="checkout_form" action="/create_order" method="post">
           {% csrf_token %}
           <div id="form_part_1">
             <h3 id="shipping_information">Shipping Information</h3>
             <p>First Name:</p>
-            <input type="text" name="" value="" placeholder="First Name">
+            <input type="text" name="s_fname" value="" placeholder="First Name">
             <p>Last Name:</p>
-            <input type="text" name="" value="" placeholder="Last Name">
+            <input type="text" name="s_lname" value="" placeholder="Last Name">
             <p>Address:</p>
-            <input type="text" name="" value="" placeholder="Address">
+            <input type="text" name="s_addr_street" value="" placeholder="Address">
+            <p>Address 2:</p>
+            <input type="text" name="s_street_two" value="" placeholder="Address 2">
             <p>City:</p>
-            <input type="text" name="" value="" placeholder="City">
+            <input type="text" name="s_addr_city" value="" placeholder="City">
             <p>State:</p>
-            <input type="text" name="" value="" placeholder="State">
+            <!--<input type="text" name="u_addr_state" value="" placeholder="State">-->
+            <select name="s_addr_state">
+              <option>AL</option>
+              <option>AK</option>
+              <option>AZ</option>
+              <option>AR</option>
+              <option>CA</option>
+              <option>CO</option>
+              <option>CT</option>
+              <option>DE</option>
+              <option>FL</option>
+              <option>GA</option>
+              <option>HI</option>
+              <option>ID</option>
+              <option>IL</option>
+              <option>IN</option>
+              <option>IA</option>
+              <option>KS</option>
+              <option>KY</option>
+              <option>LA</option>
+              <option>ME</option>
+              <option>MD</option>
+              <option>MA</option>
+              <option>MI</option>
+              <option>MN</option>
+              <option>MS</option>
+              <option>MO</option>
+              <option>MT</option>
+              <option>NE</option>
+              <option>NV</option>
+              <option>NH</option>
+              <option>NJ</option>
+              <option>NM</option>
+              <option>NY</option>
+              <option>NC</option>
+              <option>ND</option>
+              <option>OH</option>
+              <option>OK</option>
+              <option>OR</option>
+              <option>PA</option>
+              <option>RI</option>
+              <option>SC</option>
+              <option>SD</option>
+              <option>TN</option>
+              <option>TX</option>
+              <option>UT</option>
+              <option>VT</option>
+              <option>VA</option>
+              <option>WA</option>
+              <option>WV</option>
+              <option>WI</option>
+              <option>WY</option>
+            </select>
+            <p>Zip Code:</p>
+            <input type="text" name="s_addr_zip" value="" placeholder="Zip Code">
           </div>
+          <input type='submit' value='Checkout'>
         </form>
       </div>
     <div id="shopping_cart_container">
@@ -38,19 +100,19 @@
           <th>Quantity</th>
           <th>Total</th>
         </thead>
+          {% for the_product in request.session.shopping_cart %}
           <tr>
-          {% for the_product in request.session.productid %}
             <td>{{the_product.name}}</td>
             <td>{{the_product.price}}</td>
             <td>{{the_product.quantity}}</td>
-          {% endfor %}
+            <td>{{the_product.prod_total}}</td>
           </tr>
+          {% endfor %}
       </table>
     </div>
     <div id="shopping_cart_table_footer">
-      <p id="cart_total">Cart Total: {{ shopping_cart_total }}</p>
+      <p id="cart_total">Cart Total: {{ prod_total }}</p>
       <a href="/products_main"><button type="button" name="button">Continue Shopping</button></a>
-      <a href='/checkout'><button type='button' name='button'>Checkout</button></a>
     </div>
   </body>
 </html>

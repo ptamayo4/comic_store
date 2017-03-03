@@ -34,6 +34,8 @@ urlpatterns = [
     url(r'^user_register$', views.user_registration),
     url(r'^user_login$', views.user_login),
     url(r'^checkout$', views.display_login_registration),
+    url(r'^add_cart/(?P<product_id>\d+)$', views.add_cart),
+    url(r'^create_order$', views.order_create),
     url(r'^order/success', views.order_success),
     url(r'^register/me$',views.register_me),
 ]

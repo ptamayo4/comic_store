@@ -83,9 +83,10 @@
             <p class="product_price">{{product.price}}</p>
             <p class="product_name">{{product.name}}</p>
             </a>
-            <form id="add_to_cart_form" class="" action="#" method="post">
+            <form id="add_to_cart_form" class="" action="/product_spotlight/{{product.id}}" method="post">
               {% csrf_token %}
-              <button class="cart_add" type="submit" name="add_to_cart">Add to Cart</button>
+              <!--<button class="cart_add" type="submit" name="add_to_cart">Add to Cart</button>-->
+              <input type='submit' value='Add to Cart'>
             </form>
             <!-- <p id="add_to_cart_button">Add to Cart</p> -->
           </div>
@@ -127,12 +128,12 @@
             <th>Quantity</th>
             <th>Total</th>
           </thead>
-          {% for item in shopping_cart_items %}
+          {% for product in request.session.shopping_cart %}
             <tr>
-              <td>Product Name{{ product.name }}</td>
-              <td>Product Price{{ product.price }}</td>
-              <td>Quantity{{ product.quantity }}</td>
-              <td>Cost{{ total_cost }}</td>
+              <td>{{ product.name }}</td>
+              <td>{{ product.price }}</td>
+              <td>{{ product.quantity }}</td>
+              <td>{{ product.prod_total }}</td>
             </tr>
             {% endfor %}
         </table>

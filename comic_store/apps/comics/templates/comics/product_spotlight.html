@@ -18,11 +18,16 @@
   <body id="bg" style="background-image: url('{% static '/comics/images/backgrounds/temp_blue_background_4.jpg' %}')";>
     {%include 'includes/nav.html'%}
     <div id="wrapper">
+      {% if messages %}
+        {% for message in messages %}
+          <p>{{message}}</p>
+        {% endfor %}
+      {% endif %}
       <h1 id="product_spotlight_title">Item Spotlight</h1>
       <div class="product_spotlight_container">
-        <h3>{{ product.name }}</h3>
+        <h1>{{ the_product.name }}</h1>
         <div class="product_image_container_prime">
-          <img src="{{product.image.url}}" alt="Product Image">
+          <img src="{{the_product.image.url}}" alt="Product Image">
         <!-- </div>
         <div class="product_spotlight_image">
           <img src="#" alt="">
@@ -44,14 +49,16 @@
         </div> -->
       </div>
       <div class="product_description">
-        <!-- <h3>{{ product.name }}</h3> -->
-        <p id="product_description_display">{{product.description}}</p>
+        <h3>{{ the_product.name }}</h3>
+        <p id="product_description_display">{{the_product.description}}</p>
       </div>
       <div id="buy_this_product">
-        <form class="product_price_selection_form" action="#" method="post">
+        <form class="product_price_selection_form" action="/add_cart/{{the_product.id}}" method="post">
           {% csrf_token %}
-          <select class="price_select_dropdown" name="">
-            <option value="">{{ product.price}}</option>
+          <select class="price_select_dropdown" name="product_quantity">
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
             <!-- <option value="">{{ product.price }}</option>
             <option value="">{{ product.price }}</option>
             <option value="">{{ product.price }}</option> -->
@@ -66,12 +73,12 @@
             <div class="product_gallery_item">
               <a href="/product_spotlight/{{product.id}}">
               <div class="product_image_holder">
-                  <img class="product-image" class="w3-hover-sepia" src="{{product.image.url}}" alt="{{product.name}} comic picture">
+                <img class="product-image" class="w3-hover-sepia" src="{{product.image.url}}" alt="{{product.name}} comic picture">
               </div>
               <p class="product_price">{{product.price}}</p>
               <p class="product_name">{{product.name}}</p>
               </a>
-              <form class="" action="#" method="post">
+              <form class="" action="/add_cart/{{product.id}}" method="post">
                 <button class="cart_add" type="submit" name="add_to_cart">Add to Cart</button>
               </form>
               <!-- <p id="add_to_cart_button">Add to Cart</p> -->
@@ -108,14 +115,15 @@
             <th>Quantity</th>
             <th>Total</th>
           </thead>
-          {% for item in shopping_cart_items %}
+          {% for product in request.session.shopping_cart %}
             <tr>
-              <td>Product Name{{ product.name }}</td>
-              <td>Product Price{{ product.price }}</td>
-              <td>Quantity{{ product.quantity }}</td>
-              <td>Cost{{ total_cost }}</td>
+              <td>{{ product.name }}</td>
+              <td>{{ product.price }}</td>
+              <td>{{ product.quantity }}</td>
+              <td>{{ product.prod_total }}</td>
             </tr>
-            {% endfor %}
+          {% endfor %}
+          <h3>Total: {{prod_total}}</h3>
         </table>
         <div id="shopping_cart_link">
           <a href="/shopping_cart"><p id="check_out_click">Click for Checkout</p></a>
