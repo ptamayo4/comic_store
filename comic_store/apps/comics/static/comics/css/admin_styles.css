@@ -16,11 +16,15 @@ li{
     list-style: none;
 }
 #logoff{
-    margin-left: 1000px;
+    display: inline-block;
 }
-#header_link{
+.header_link{
     text-decoration: none;
-    color: white;
+    color: #cee1ff;
+}
+.header_link:visited{
+    text-decoration: none;
+    color: #cee1ff;
 }
 #products_table{
     width: 1200px;

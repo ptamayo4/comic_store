@@ -15,29 +15,33 @@
             <li id="logoff"><a class="header_link" href = 'admin_logout'>Log Off</a></li>
         </ul>
         <h1>Users</h1>
-        <form action="user_update" method="POST">
-            {% csrf_token %}
-            <table>
-                <th>User ID</th>
-                <th>User Name</th>
-                <th>Email</th>
-                <th>Authority Level</th>
-                {% for user in users %}
-                <tr>
-                    <td>{{user.id}}</td>
-                    <td>{{user.first_name}} {{user.last_name}}</td>
-                    <td>{{user.email}}</td>
-                    <td>
-                        <select>
-                            <option value={{user.admin_auth}}>{{user.admin_auth}}</option>
+        <table>
+            <th>User ID</th>
+            <th>User Name</th>
+            <th>Email</th>
+            <th>Authority Level</th>
+            <th>Action</th>
+            {% for user in users %}
+            <tr>
+                <form action='user_update/{{user.id}}' method="POST">
+                    {% csrf_token %}
+                <td>{{user.id}}</td>
+                <td>{{user.first_name}} {{user.last_name}}</td>
+                <td>{{user.email}}</td>
+                <td>
+                    <select name="new_auth">
+                        <option value={{user.admin_auth}}>{{user.admin_auth}}</option>
+                        {% if user.admin_auth == True %}
                             <option value="False">False</option>
-                            <input name="user{{user.id}}" type="hidden" value="{{user.id}}">
-                        </select>
-                    </td>
-                </tr>
-                {% endfor %}
-            </table>
-            <input type="submit" value="Update Users">
-        </form>
+                        {% else %}
+                            <option value="True">True</option>
+                        {% endif %}
+                    </select>
+                </td>
+                <td><input type="submit" value="Update"></form><a href="user_delete/{{user.id}}"><button>Delete</button></a></td>
+            </tr>
+            {% endfor %}
+        </table>
+        <input type="submit" value="Update Users">
     </body>
 </html>

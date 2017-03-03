@@ -20,8 +20,10 @@
                 <h2>{{ message }}</h2>
             {% endfor %}
         {% endif %}
-        <form>
-            Search<input type="text" name="prodsearch">
+        <form action="admin_prod_search" method="POST">
+            {% csrf_token %}
+            <input type="text" name="prod_search" value="Search by Name">
+            <input type="submit" value="Search">
         </form>
         <button id="myBtn">Add new product</button>
 
@@ -79,7 +81,7 @@
             <th>Name</th>
             <th>Inventory Count</th>
             <th>Category</th>
-            <th>Quantity Sold</th>
+            <th>Price</th>
             <th>Action</th>
             {% for product in products %}
             <tr>
@@ -88,7 +90,7 @@
                 <td>{{product.name}}</td>
                 <td>{{product.quantity}}</td>
                 <td>{{product.category.name}}</td>
-                <td>0</td> <!-- NEED TO CHANGE -->
+                <td>{{product.price}}
                 <td><a href='product_edit/{{product.id}}'>edit</a> <a href='product_delete/{{product.id}}'>delete</a></td>
             </tr>
             {% endfor %}
