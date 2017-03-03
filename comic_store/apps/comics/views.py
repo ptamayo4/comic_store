@@ -305,7 +305,7 @@ def product_spotlight(request, product_id):
     category_id = product.category_id
     context = {
         "the_product": product,
-        "prod_total": request.session['product_total']
+        "prod_total": request.session['product_total'],
         "products": Product.productManager.filter(category__id= category_id)
     }
     return render(request, 'comics/product_spotlight.html', context)
