@@ -13,35 +13,6 @@
 <!-- __Information Form -->
       <h1 id="shopping_cart_title">Shopping Cart Portal</h1>
       <div id="checkout_information_form">
-        <form id="checkout_form" action="index.html" method="post">
-          {% csrf_token %}
-          <div id="form_part_1">
-            <h3 id="shipping_information">Shipping Information</h3>
-            <p>First Name:</p>
-            <input type="text" name="" value="" placeholder="First Name">
-            <p>Last Name:</p>
-            <input type="text" name="" value="" placeholder="Last Name">
-            <p>Address:</p>
-            <input type="text" name="" value="" placeholder="Address">
-            <p>City:</p>
-            <input type="text" name="" value="" placeholder="City">
-            <p>State:</p>
-            <input type="text" name="" value="" placeholder="State">
-          </div>
-          <div id="form_part_2">
-            <h3 id="billing_information">Billing Information</h3>
-            <input type="checkbox" name="" value="">Same as Shipping Information
-            <p>First Name:</p>
-            <input type="text" name="" value="" placeholder="First Name">
-            <p>Last Name:</p>
-            <input type="text" name="" value="" placeholder="Last Name">
-            <p>Address:</p>
-            <input type="text" name="" value="" placeholder="Address">
-            <p>City:</p>
-            <input type="text" name="" value="" placeholder="City">
-            <p>State:</p>
-            <input type="text" name="" value="" placeholder="State">
-  <body>
     <div id="shopping_cart_container">
       <table id="shopping_cart_display">
         <thead>
@@ -50,180 +21,19 @@
           <th>Quantity</th>
           <th>Total</th>
         </thead>
-        {% for product in products %}
           <tr>
-            <td>{{product.name}}</td>
-            <td>{{product.price}}</td>
-            <td>{{product.selected_quantity}}</td>
-            <td>{{product.}}</td>
-          </tr>
+          {% for the_product in request.session.productid %}
+            <td>{{the_product.name}}</td>
+            <td>{{the_product.price}}</td>
+            <td>{{the_product.quantity}}</td>
           {% endfor %}
+          </tr>
       </table>
     </div>
     <div id="shopping_cart_table_footer">
       <p id="cart_total">Cart Total: {{ shopping_cart_total }}</p>
-      <a href="#"><button type="button" name="button">Continue Shopping</button></a>
-    </div>
-    <div id="checkout_information_form">
-      <h1>Register or Login to Complete Order!</h1>
-      <!--<form id="checkout_form" action="index.html" method="post">-->
-        <div id="form_part_1">
-          <form action="/register" method="post">
-            {% csrf_token %}
-          <!--<h3 id="shipping_information">Shipping Information</h3>-->
-            <h3 id="shipping_information">Register</h3>
-            <p>First Name:</p>
-            <input type="text" name="u_fname" value="" placeholder="First Name">
-            <p>Last Name:</p>
-            <input type="text" name="u_lname" value="" placeholder="Last Name">
-            <p>Email Address:</p>
-            <input type="text" name="u_email" value="" placeholder="Email Address">
-            <p>Password:</p>
-            <input type="text" name="u_pw" value="" placeholder="Password">
-            <p>Confirm Password:</p>
-            <input type="text" name="u_confirm_pw" value="" placeholder="Confirm Password">
-            <h3>Ultra Safe Billing Information Saver (we won't sell your data)</h3>
-            <p>Address:</p>
-            <input type="text" name="u_addr_street" value="" placeholder="Address">
-            <p>Address 2:</p>
-            <input type="text" name="u_street_two" value="" placeholder="Address2">
-            <p>City:</p>
-            <input type="text" name="u_addr_city" value="" placeholder="City">
-            <p>State:</p>
-            <!--<input type="text" name="u_addr_state" value="" placeholder="State">-->
-            <select name="u_addr_state">
-              <option>AL</option>
-              <option>AK</option>
-              <option>AZ</option>
-              <option>AR</option>
-              <option>CA</option>
-              <option>CO</option>
-              <option>CT</option>
-              <option>DE</option>
-              <option>FL</option>
-              <option>GA</option>
-              <option>HI</option>
-              <option>ID</option>
-              <option>IL</option>
-              <option>IN</option>
-              <option>IA</option>
-              <option>KS</option>
-              <option>KY</option>
-              <option>LA</option>
-              <option>ME</option>
-              <option>MD</option>
-              <option>MA</option>
-              <option>MI</option>
-              <option>MN</option>
-              <option>MS</option>
-              <option>MO</option>
-              <option>MT</option>
-              <option>NE</option>
-              <option>NV</option>
-              <option>NH</option>
-              <option>NJ</option>
-              <option>NM</option>
-              <option>NY</option>
-              <option>NC</option>
-              <option>ND</option>
-              <option>OH</option>
-              <option>OK</option>
-              <option>OR</option>
-              <option>PA</option>
-              <option>RI</option>
-              <option>SC</option>
-              <option>SD</option>
-              <option>TN</option>
-              <option>TX</option>
-              <option>UT</option>
-              <option>VT</option>
-              <option>VA</option>
-              <option>WA</option>
-              <option>WV</option>
-              <option>WI</option>
-              <option>WY</option>
-            </select>
-            <p>Zip Code:</p>
-            <input type="number" name="u_addr_zip" placeholder="Zip Code">
-            <input type="submit" value="Register">
-          </form>
-        </div>
-        <div id="form_part_2">
-          <form action="/login" method="post">
-            <h3>Already Registered?</h3>
-            <!--<h3 id="billing_information">Billing Information</h3>-->
-            <!--<input type="checkbox" name="" value="">Same as Shipping Information
-            <p>First Name:</p>
-            <input type="text" name="u_fname" value="" placeholder="First Name">
-            <p>Last Name:</p>
-            <input type="text" name="u_lname" value="" placeholder="Last Name">
-            <p>Address:</p>
-            <input type="text" name="u_address" value="" placeholder="Address">
-            <p>Address 2:</p>
-            <input type="text" name="u_address2" value="" placeholder="Address2">
-            <p>City:</p>
-            <input type="text" name="u_city" value="" placeholder="City">
-            <p>State:</p>
-            <input type="text" name="u_state" value="" placeholder="State">
-            <p>Card#:</p>
-            <input type="text" name="" value="" placeholder="Enter Card Number Here">
-            <p>Security Code:</p>
-            <input type="text" name="" value="" placeholder="Enter Security Here">
-            <p>Expiration Date:</p>
-            <input type="date" name="" value="" placeholder="">
-          </div>
-        </form>
-      </div>
-
-<!-- __Shopping Cart Display -->
-
-      <div id="shopping_cart_container">
-        <table id="shopping_cart_display">
-          <thead>
-            <th>Item</th>
-            <th>Price</th>
-            <th>Quantity</th>
-            <th>Total</th>
-          </thead>
-          {% for item in shopping_cart_items %}
-            <tr>
-              <td>{{ product_name }}</td>
-              <td>{{ product_price }}</td>
-              <td>{{ product_selected_quantity }}</td>
-              <td>{{ total_cost }}</td>
-            </tr>
-            {% endfor %}
-        </table>
-        <div class="pagination">
-          <span class="step-links">
-              {% if products.has_previous %}
-                  <a href="?page={{ products.previous_page_number }}">previous</a>
-              {% endif %}
-
-              <span class="current">
-                  Page {{ products.number }} of {{ products.paginator.num_pages }}.
-              </span>
-
-              {% if products.has_next %}
-                  <a href="?page={{ products.next_page_number }}">next</a>
-              {% endif %}
-          </span>
-            <input type="date" name="" value="" placeholder="">-->
-            <p>Email Address:</p>
-            <input type="text" name="login_email" placeholder="Email Address">
-            <p>Password:</p>
-            <input type="text" name="login_pw" placeholder="Password">
-            <input type="submit" value="Pay">
-        </div>
-      </div>
-
-<!-- __Table Footer -->
-
-      <div id="shopping_cart_table_footer">
-        <p id="cart_total">Cart Total: {{ shopping_cart_total }}</p>
-        <a href="/products_main"><button type="button" name="button">Continue Shopping</button></a>
-      </div>
-
+      <a href="/products_main"><button type="button" name="button">Continue Shopping</button></a>
+      <a href='/checkout'><button type='button' name='button'>Checkout</button></a>
     </div>
   </body>
 </html>
