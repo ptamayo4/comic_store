@@ -62,7 +62,8 @@ def index(request):
     # category    =   "Superhero",
     # quantity    =   42
     # )
-
+    # create product
+    #print the_product
     if 'product_ids' not in request.session:
         request.session['product_ids'] = {}
 
@@ -97,10 +98,21 @@ def index(request):
     # Category.objects.create(
     #     name = 'Samurai'
     # )
+    #the_category = Category.objects.create(name='Horror')
+    #Product.productManager.create(name='Dope Shit', description='The shit description', image=None, price=900, quantity=300, category=the_category)
+    #product1 = Product.productManager.get(id=31)
+    #product2 = Product.productManager.get(id=32)
+    #request.session['product_ids'].append(product1)
+    #request.session['product_ids'].append(product2)
+    #price1 = product1.price
+    #price2 = product2.price
+    #print total_price
+    #Order.orderManager.create(s_fname='Test', s_lname='Tester', user=None, 
     context = {
-    "products":Product.productManager.all()
+        "products":Product.productManager.all()
     }
     return render(request, 'comics/index.html', context)
+    #return render(request, 'comics/test.html', context)
 
 def admin(request):
     return render(request, 'comics/admin.html')
@@ -166,11 +178,17 @@ def product_category(request,category_id):
     }
     return render(request,'comics/prod_category.html', context)
 
-def product_spotlight(request):
-    return render(request, 'comics/product_spotlight.html')
+def product_spotlight(request, product_id):
+    context = {
+            'the_product': Product.productManager.get(id=product_id)
+            }
+    return render(request, 'comics/product_spotlight.html', context)
 
 def shopping_cart(request):
-    return render(request, 'comics/shopping_cart.html')
+    context = {
+            'the_product': Product.productManager.all()
+            }
+    return render(request, 'comics/shopping_cart.html', context)
 
 def product_adder(request):
     if request.method=="POST":

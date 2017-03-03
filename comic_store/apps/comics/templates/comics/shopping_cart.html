@@ -21,19 +21,18 @@
           <th>Quantity</th>
           <th>Total</th>
         </thead>
-        {% for product in products %}
           <tr>
-            <td>{{product.name}}</td>
-            <td>{{product.price}}</td>
-            <td>{{product.selected_quantity}}</td>
-            <td>{{product.}}</td>
-          </tr>
+          {% for the_product in request.session.productid %}
+            <td>{{the_product.name}}</td>
+            <td>{{the_product.price}}</td>
+            <td>{{the_product.quantity}}</td>
           {% endfor %}
+          </tr>
       </table>
     </div>
     <div id="shopping_cart_table_footer">
       <p id="cart_total">Cart Total: {{ shopping_cart_total }}</p>
-      <a href="#"><button type="button" name="button">Continue Shopping</button></a>
+      <a href="/products_main"><button type="button" name="button">Continue Shopping</button></a>
       <a href='/checkout'><button type='button' name='button'>Checkout</button></a>
     </div>
   </body>
