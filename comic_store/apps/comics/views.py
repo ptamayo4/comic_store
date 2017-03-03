@@ -115,9 +115,9 @@ def index(request):
     #print total_price
     #Order.orderManager.create(s_fname='Test', s_lname='Tester', user=None,
 
-    # User.userManager.create(email='usertwo@usertwo.com',password='12345678',first_name='usertwo',last_name='lastname')
-    # user = User.userManager.get(email='usertwo@usertwo.com')
-    # Order.orderManager.create(user=user,s_fname='twouser',s_lname='thelastname',total=30000,status=1)
+    # User.userManager.create(email='usetwo@usertwo.com',password='12345678',first_name='usertwo',last_name='lastname')
+    # user = User.userManager.get(email='usetwo@usertwo.com')
+    # Order.orderManager.create(user=user,s_fname='twouser',s_lname='thelastname',total=3.99,status=2)
     context = {
         "products":Product.productManager.all()
     }
@@ -137,7 +137,7 @@ def admin_login(request):
             request.session['id'] = admin['admin'].id
             request.session['auth'] = admin['admin'].admin_auth
             context = {
-            "users": User.userManager.all()
+            "admin": User.userManager.get(id=request.session['id'])
             }
             return render(request, 'comics/admin_main.html', context)
     return redirect('/admin')
@@ -176,16 +176,33 @@ def product_view(request):
         	products = paginator.page(paginator.num_pages)
         context = {
         	'products': products,
+            'categories': Category.objects.all()
         }
         return render(request, 'comics/admin_products.html', context)
     else:
         return redirect('/')
 
+def admin_prod_search(request):
+    if 'auth' in request.session:
+        if request.method=="POST":
+            products = Product.productManager.filter(name__contains=request.POST['prod_search'])
+            context = {
+            	'products': products,
+                'categories': Category.objects.all()
+            }
+            return render(request, 'comics/admin_products.html', context)
+    else:
+        return redirect('/')
+
+
 def orders_view(request):
-    context = {
-    "orders": Order.orderManager.all()
-    }
-    return render(request, 'comics/admin_orders.html', context)
+    if 'auth' in request.session:
+        context = {
+        "orders": Order.orderManager.all()
+        }
+        return render(request, 'comics/admin_orders.html', context)
+    else:
+        return redirect('/')
 
 def products_main(request):
     if 'cart' not in request.session:
@@ -302,19 +319,22 @@ def shopping_cart(request):
     return render(request, 'comics/shopping_cart.html', context)
 
 def product_adder(request):
-    if request.method=="POST":
-        print request.POST
-        print type(request.POST['p_price'])
-        image = request.FILES['image']
-        product = Product.productManager.validate_product(request.POST, image)
-        if 'errors' in product:
-            for error in product['errors']:
-                messages.error(request, error)
-            return redirect('/dashboard/products')
-        if 'the_product' in product:
-            messages.success(request, "Successfully added product!")
-            return redirect('/dashboard/products')
-    return redirect('/dashboard/products')
+    if 'auth' in request.session:
+        if request.method=="POST":
+            print request.POST
+            print type(request.POST['p_price'])
+            image = request.FILES['image']
+            product = Product.productManager.validate_product(request.POST, image)
+            if 'errors' in product:
+                for error in product['errors']:
+                    messages.error(request, error)
+                return redirect('/dashboard/products')
+            if 'the_product' in product:
+                messages.success(request, "Successfully added product!")
+                return redirect('/dashboard/products')
+        return redirect('/dashboard/products')
+    else:
+        return redirect('/')
 
 def order_create(request):
     if request.method == 'POST':
@@ -328,16 +348,27 @@ def order_create(request):
             return redirect('/charge/'+str(the_order.id))
 
 def admin_users(request):
-    context = {
-    "users": User.userManager.all()
-    }
-    return render(request, 'comics/users.html', context)
+    if 'auth' in request.session:
+        context = {
+        "users": User.userManager.all()
+        }
+        return render(request, 'comics/users.html', context)
+    else:
+        return redirect('/')
 
-def user_update(request):
-    # if request.method == "POST":
-    #     for item in request.POST:
-    #         print item['value']
-    return redirect('/dashboard/users')
+def user_update(request, user_id):
+    if 'auth' in request.session:
+        User.userManager.filter(id=user_id).update(admin_auth=request.POST['new_auth'])
+        return redirect('/dashboard/users')
+    else:
+        return redirect('/')
+
+def user_delete(request, user_id):
+    if 'auth' in request.session:
+        User.userManager.get(id=user_id).delete()
+        return redirect('/dashboard/users')
+    else:
+        return redirect('/')
 
 def display_login_registration(request):
     return render(request, 'comics/login_register.html')
@@ -386,22 +417,31 @@ def display_test(request):
     return render(request, 'comics/product_test.html', context)
 
 def product_edit(request, product_id):
-    context = {
-    "product": Product.productManager.get(id=product_id),
-    "categories": Category.objects.all()
-    }
-    print context['product'].description
-    return render(request, 'comics/product_edit.html', context)
+    if 'auth' in request.session:
+        context = {
+        "product": Product.productManager.get(id=product_id),
+        "categories": Category.objects.all()
+        }
+        print context['product'].description
+        return render(request, 'comics/product_edit.html', context)
+    else:
+        return redirect('/')
 
 def product_delete(request, product_id):
-    Product.productManager.get(id=product_id).delete()
-    print "Successfully deleted " + product_id
-    return redirect('/dashboard/products')
+    if 'auth' in request.session:
+        Product.productManager.get(id=product_id).delete()
+        print "Successfully deleted " + product_id
+        return redirect('/dashboard/products')
+    else:
+        return redirect('/')
 
 def product_update(request, product_id):
-    if request.method=="POST":
-        update_product = Product.productManager.update_product(request.POST, product_id)
-    return redirect('/dashboard/products')
+    if 'auth' in request.session:
+        if request.method=="POST":
+            update_product = Product.productManager.update_product(request.POST, product_id)
+        return redirect('/dashboard/products')
+    else:
+        return redirect('/')
 
 # ============== #
 # === STRIPE === #
