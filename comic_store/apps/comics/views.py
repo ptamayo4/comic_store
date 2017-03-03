@@ -305,7 +305,7 @@ def product_spotlight(request, product_id):
     category_id = product.category_id
     context = {
         "the_product": product,
-        "prod_total": request.session['product_total']
+        "prod_total": request.session['product_total'],
         "products": Product.productManager.filter(category__id= category_id)
     }
     return render(request, 'comics/product_spotlight.html', context)
@@ -387,12 +387,12 @@ def user_registration(request):
 def user_login(request):
     if request.method == 'POST':
         # get order id somehow
-        existing_user = User.userManager.validate_login(request.POST)
+        existing_user = User.userManager.user_login(request.POST)
         if 'error' in existing_user:
             messages.error(request, existing_user['error'])
             return redirect('/')
-        if 'logged_in_user' in existing_user:
-            request.session['user_id'] = existing_user.id
+        if 'theuser' in existing_user:
+            request.session['user_id'] = existing_user['theuser'].id
             return redirect('/')
 
 

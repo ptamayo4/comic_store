@@ -28,10 +28,10 @@ class UserManager(models.Manager):
 
     def user_login(self, post_data):
         error_msgs = []
-        if User.userManager.get(email=post_data['email']):
-            stored_pw = User.userManager.get(email=post_data['email']).password
-            if stored_pw == post_data['password']:
-                return {"theuser": User.userManager.get(email=post_data['email'])}
+        if User.userManager.get(email=post_data['login_email']):
+            stored_pw = User.userManager.get(email=post_data['login_email']).password
+            if stored_pw == bcrypt.hashpw(post_data['login_pw'].encode('utf-8'), stored_pw.encode('utf-8')):
+                return {"theuser": User.userManager.get(email=post_data['login_email'])}
             else:
                 error_msgs.append("Invalid Login")
                 return {"errors":error_msgs}
@@ -73,17 +73,15 @@ class UserManager(models.Manager):
             error_msgs.append('Password must be 8 characters or longer')
         if u_pw != u_confirm_pw:
             error_msgs.append('Passwords do not match')
-        if len(u_addr_street) < 1:
-            error_msgs.append('Address field is blank')
-        elif not STREET_ADDRESS_REGEX.match(u_addr_street):
-            error_msgs.append('Invalid street address')
+        #if len(u_addr_street) < 1:
+        #    error_msgs.append('Address field is blank')
+        #elif not STREET_ADDRESS_REGEX.match(u_addr_street):
+        #    error_msgs.append('Invalid street address')
         if len(u_addr_city) < 1:
             error_msgs.append('City field is blank')
         # u_addr_city regex
         elif not NAME_REGEX.match(u_addr_city):
             error_msgs.append('Invalid city name')
-        if len(u_addr_state) < 1:
-            error_msgs.append('State field is blank')
         # u_addr_state regex
         if len(u_addr_zip) < 1:
             error_msgs.append('Zip code field is blank')
@@ -94,7 +92,7 @@ class UserManager(models.Manager):
             pw = u_pw.encode('utf-8')
             hashed = bcrypt.hashpw(pw, bcrypt.gensalt())
             user_location = Location.objects.create(addr_street=u_addr_street, street_two=u_street_two, addr_city=u_addr_city, addr_state=u_addr_state, addr_zip=u_addr_zip)
-            the_user = User.objects.create(first_name=u_fname, last_name=u_lname, email=u_email, password=hashed, user_location=user_location)
+            the_user = User.userManager.create(first_name=u_fname, last_name=u_lname, email=u_email, password=hashed, user_location=user_location)
             return {'the_user': the_user}
 
 
@@ -241,7 +239,7 @@ class Product(models.Model):
 
 class Order(models.Model):
     products    =   models.ManyToManyField(Product, related_name="product_orders")
-    user        =   models.ForeignKey(User, related_name="user_orders")
+    user        =   models.ForeignKey(User, related_name="user_orders", null=True)
     s_fname     =   models.CharField(max_length=60, default=None)
     s_lname     =   models.CharField(max_length=60, default=None)
     total       =   models.IntegerField(default=0)
@@ -252,12 +250,12 @@ class Order(models.Model):
 
 class Location(models.Model):
     addr_street =   models.CharField(max_length=100)
-    street_two  =   models.CharField(max_length=100, default=None)
+    street_two  =   models.CharField(max_length=100, null=True)
     addr_city   =   models.CharField(max_length=100)
     addr_state  =   models.CharField(max_length=20)
     addr_zip    =   models.IntegerField()
-    user        =   models.OneToOneField(User, related_name='user_location')
-    order       =   models.OneToOneField(Order, related_name='shipping_location')
+    user        =   models.OneToOneField(User, related_name='user_location', null=True)
+    order       =   models.OneToOneField(Order, related_name='shipping_location', null=True)
 
 # ============== #
 # === STRIPE === #
