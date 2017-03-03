@@ -18,18 +18,25 @@
   </script>
     </head>
     <body id="bg" style="background-image: url('{% static '/comics/images/backgrounds/temp_admin_background_red.jpg' %}')";>
-      <div id="log_reg-con">
-        <div>
-          <form action='/user_login' method='post'>
-            <h2>Memebership Required</h2>
-            {% csrf_token %}
-            <input type="text" name="login_email" placeholder="Email Address">
-            <input type="text" name="login_pw" placeholder="Password">
-            <input type="submit" value="Login" id="log-me"><br>
-            <a href="/register/me">Not a member?</a>
-          </form>
+      {%if request.session.user_id == 'null'%}
+        <div id="log_reg-con">
+          <div>
+            {%if messages%}
+              {%for message in messages%}
+                <p class="{{message.tags}}">{{message}}</p>
+              {%endfor%}
+            {%endif%}
+            <form action='/user_login' method='post'>
+              <h2>Memebership Required</h2>
+              {% csrf_token %}
+              <input type="text" name="login_email" placeholder="Email Address">
+              <input type="text" name="login_pw" placeholder="Password">
+              <input type="submit" value="Login" id="log-me"><br>
+              <a href="/register/me">Not a member?</a>
+            </form>
+          </div>
         </div>
-      </div>
+      {%endif%}
 <!-- __Slide Show -->
       <div class="slideshow-container">
 

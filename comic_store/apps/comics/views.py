@@ -68,7 +68,8 @@ def index(request):
     #print the_product
     if 'product_ids' not in request.session:
         request.session['product_ids'] = {}
-
+    if 'user_id' not in request.session:
+        request.session['user_id'] = 'null'
     # User.userManager.create(
     # email       =   "brian@gmail.com",
     # password    =   "12345678",
@@ -296,11 +297,10 @@ def user_login(request):
         existing_user = User.userManager.validate_login(request.POST)
         if 'error' in existing_user:
             messages.error(request, existing_user['error'])
-            return redirect('/shopping_cart')
+            return redirect('/')
         if 'logged_in_user' in existing_user:
-            the_order = Order.orderManager.create_order
-            messages.success(request, existing_user['logged_in_user'].first_name+', enter your credit card information to complete your order!')
-            return redirect('/charge')
+            request.session['user_id'] = existing_user.id
+            return redirect('/')
 
 
 def display_test(request):
