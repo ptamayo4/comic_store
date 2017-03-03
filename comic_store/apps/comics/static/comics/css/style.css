@@ -5,7 +5,10 @@
   /*background-image: image("temp_blue_background_web.png");*/
   color: white;
 }
-
+html,body{
+  width:100%;
+  height:100%;
+}
 #cover{
   /*background-image: image("temp_blue_background_2_web.png");*/
   /*background-size: cover;*/
