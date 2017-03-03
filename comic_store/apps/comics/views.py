@@ -393,8 +393,8 @@ def user_login(request):
         if 'error' in existing_user:
             messages.error(request, existing_user['error'])
             return redirect('/')
-        if 'logged_in_user' in existing_user:
-            request.session['user_id'] = existing_user.id
+        if 'theuser' in existing_user:
+            request.session['user_id'] = existing_user['theuser'].id
             return redirect('/')
 
 
