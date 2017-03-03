@@ -25,7 +25,8 @@
                     <td>{{order.user.first_name}}</td>
                     <td>{{order.total}}</td>
                     <td>
-                        <form action="order_update" method="POST">
+                        <form action="order_update/{{order.id}}" method="POST">
+                            {% csrf_token %}
                         <select name="new_status">
                             {% if order.status == 1 %}
                                 <option value={{order.status}}>Processing</option>
@@ -42,7 +43,7 @@
                             {% endif %}
                         </select>
                     </td>
-                    <td><input type="submit" value="Update"></form><a href="order_delete/{{user.id}}"><button>Delete</button></a></td>
+                    <td><input type="submit" value="Update"></form><a href="order_delete/{{order.id}}"><button>Delete</button></a></td>
                 </tr>
             {% endfor %}
         </table>

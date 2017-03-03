@@ -205,6 +205,7 @@ def orders_view(request):
         return redirect('/')
 
 def products_main(request):
+    user = User.userManager.get(id=request.session['user_id'])
     if 'cart' not in request.session:
         request.session['cart'] = []
 
@@ -223,7 +224,8 @@ def products_main(request):
 
     context={
         "products" : products,
-        "categories" : Category.objects.annotate(sum_prod=Count('product_category')).filter(sum_prod__gt=0)
+        "categories" : Category.objects.annotate(sum_prod=Count('product_category')).filter(sum_prod__gt=0),
+        'orders' : Order.objects.filter(user=user),
     }
 
     return render(request, 'comics/products_main.html', context)
@@ -514,3 +516,18 @@ def order_success(request):
     return render(request,'comics/success.html')
 def register_me(request):
     return render(request,'comics/reg.html')
+
+def order_update(request, order_id):
+    if 'auth' in request.session:
+        if request.method == "POST":
+            Order.orderManager.filter(id=order_id).update(status=request.POST['new_status'])
+            return redirect('/dashboard/orders')
+        return redirect('/dashboard/orders')
+
+def order_delete(request, order_id):
+    if 'auth' in request.session:
+        Order.orderManager.get(id=order_id).delete()
+        print "Successfully deleted Order#" + order_id
+        return redirect('/dashboard/orders')
+    else:
+        return redirect('/')

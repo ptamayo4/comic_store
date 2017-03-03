@@ -11,6 +11,11 @@
     <form action="/user_register" method="post">
     {% csrf_token %}
     <h3 id="shipping_information" style="font-size:30px;">Register</h3>
+    {%if messages%}
+      {%for message in messages%}
+        <p class="{{message.tags}}">{{message}}</p>
+      {%endfor%}
+    {%endif%}
     <input type="text" name="u_fname" value="" placeholder="First Name">
     <input type="text" name="u_lname" value="" placeholder="Last Name">
     <input type="text" name="u_email" value="" placeholder="Email Address">
