@@ -20,7 +20,7 @@
     <div id="wrapper">
       <h1 id="product_spotlight_title">Item Spotlight</h1>
       <div class="product_spotlight_container">
-        <h1>{{ product.name }}</h1>
+        <h3>{{ product.name }}</h3>
         <div class="product_image_container_prime">
           <img src="{{product.image.url}}" alt="Product Image">
         <!-- </div>
@@ -44,7 +44,7 @@
         </div> -->
       </div>
       <div class="product_description">
-        <h3>{{ product.name }}</h3>
+        <!-- <h3>{{ product.name }}</h3> -->
         <p id="product_description_display">{{product.description}}</p>
       </div>
       <div id="buy_this_product">
@@ -61,7 +61,7 @@
       </div>
       <div id="similar_products_footer">
         <h3>Similar Products</h2>
-          <div id="product_gallery">
+          <div id="product_gallery_footer">
             {% for product in products %}
             <div class="product_gallery_item">
               <a href="/product_spotlight/{{product.id}}">

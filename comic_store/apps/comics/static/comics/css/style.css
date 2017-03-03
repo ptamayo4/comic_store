@@ -5,10 +5,12 @@
   /*background-image: image("temp_blue_background_web.png");*/
   color: white;
 }
+
 html,body{
   width:100%;
   height:100%;
 }
+
 #cover{
   /*background-image: image("temp_blue_background_2_web.png");*/
   /*background-size: cover;*/
@@ -23,6 +25,19 @@ html,body{
     background-position: top;
     background-attachment: fixed;
 }
+
+#wrapper{
+  width: 100%;
+}
+
+#temp_title_image{
+  position: absolute;
+  top: -300px;
+  height: 300px;
+  width: 100%;
+  z-index: 9999999999;
+}
+
 /*============*/
 /* NAV STYLE */
 /*============*/
@@ -154,8 +169,8 @@ height: 60px;
 #products_console_2{
   display: inline-block;
   vertical-align: top;
-  width: 37%;
-  height: 700px;
+  width: 45%;
+  height: 705px;
   margin: 30px 0px 7px 10px;
   padding: 10px 10px 10px 10px;
   /*box-shadow: 10px 10px 5px #888888;*/
@@ -223,7 +238,7 @@ select{
   display: inline-block;
   vertical-align: top;
   width: 150px;
-  height: 270px;
+  height: 290px;
   margin: 35px 0px 0px 10px;
   padding: 0px 0px 0px 0px;
   /*box-shadow: 10px 10px 5px #888888;*/
@@ -270,7 +285,7 @@ select{
 }
 
 #add_to_cart_button{
-  margin-top: 2px;
+  margin-top: 10px;
   padding:1px;
   background-image: linear-gradient(to right, goldenrod, transparent);
 }
@@ -294,7 +309,7 @@ option{
 }
 
 .pagination{
-  margin-top: 50px;
+  margin-top: 45px;
 }
 
 #temp_logo{
@@ -409,42 +424,53 @@ option{
 /****************************/
 .product_spotlight_container{
   display: inline-block;
-  width: 300px;
+  vertical-align: top;
+  width: 225px;
   height: 450px;
   margin: 30px 0px 0px 30px;
-  padding: 0px 0px 0px 10px;
+  padding: 0px 0px 0px 0px;
   font-weight: bold;
-  border-bottom: 1px solid white;
+  /*border-bottom: 1px solid white;*/
 
 }
 
 .product_image_container_prime{
   display: block;
-  width: 225px;
-  height: 300px;
-  margin: 2px 0px 0px 20px;
-  padding: 0px 0px 0px 10px;
+  width: inherit;
+  height: auto;
+  margin: 0px 0px 0px 0px;
+  padding: 0px 0px 0px 0px;
   font-weight: bold;
 }
 
+.product_image_container_prime > img{
+  width: inherit;
+  height: auto;
+}
+
+
 .product_spotlight_image{
   display: inline-block;
+  vertical-align: top;
   width: 30px;
   height: 50px;
   margin: 20px 0px 0px 2px;
-  padding: 0px 0px 0px 10px;
-  font-weight: bold;
+  padding: 0px 0px 0px 0px;
+  font-weight: 200;
 }
 
 .product_description{
   display: inline-block;
   vertical-align: top;
-  width: 600px;
-  height: 450px;
+  position: relative;
+  left: 240px;
+  bottom:376px;
+  width: 400px;
+  height: 400px;
   margin: 30px 0px 0px 2px;
-  padding: 0px 0px 0px 10px;
+  padding: 0px 0px 0px 15px;
   font-weight: bold;
-  border-bottom: 1px solid white;
+  border-left: 2px solid white;
 }
 
 
@@ -453,22 +479,28 @@ option{
   height: auto;
   width: auto;
   position: relative;
-  left:860px;
-  bottom: 45px;
+  left:140px;
+  bottom: 345px;
   margin: 0px 0px 0px 0px;
   padding: 0px 0px 0px 0px;
 }
 
 #similar_products_footer{
   display: block;
+  position: relative;
+  bottom: 300px;
   width: 917px;
-  height: 330px;
-  margin: 5px 0px 7px 30px;
-  padding: 0px 0px 0px 10px;
+  height: 360px;
+  margin: 0px 0px 7px 0px;
+  padding: 0px 0px 0px 0px;
   font-weight: bold;
   border-bottom: 1px solid white;
-  overflow-x:scroll;
+}
 
+#product_gallery_footer{
+  width: inherit;
+  height: 360px;
+  overflow-x: scroll;
 }
 
 #product_spotlight_title{
@@ -487,7 +519,7 @@ option{
   display: inline-block;;
   vertical-align: top;
   width: 800px;
-  height: 552px;
+  height: 350px;
   margin: 30px 0px 7px 0px;
   padding: 10px 0px 10px 10px;
   font-weight: bold;
@@ -496,6 +528,7 @@ option{
 }
 
 #shopping_cart_display{
+  height: 350px;
   overflow-y: scroll;
   z-index: 0;
 }
@@ -512,14 +545,14 @@ option{
   height: auto;
   width: auto;
   position: relative;
-  left:1250px;
+  left:865px;
 
 }
 
 #checkout_information_form{
   display: inline-block;
   vertical-align: top;
-  width: 500px;
+  width: 200px;
   height: auto;
   margin: 30px 0px 7px 30px;
   padding: 10px 10px 10px 10px;
@@ -579,8 +612,9 @@ option{
 }
 
 #display_cart_button{
+  width: 230px;
   position: relative;
-  left: 75%;
+  left: 4px;
 }
 
 #check_out_click{
@@ -657,6 +691,7 @@ option{
   background:red;
   margin-top:-22px;
   padding:20px 0;
+  position:relative;
 }
 #home-ban h1{
   color:white;
