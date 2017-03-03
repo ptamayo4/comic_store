@@ -18,12 +18,12 @@
   <body id="bg" style="background-image: url('{% static '/comics/images/backgrounds/temp_blue_background_4.jpg' %}')";>
     {%include 'includes/nav.html'%}
     <div id="wrapper">
-      <h1 id="product_spotlight_title">Product Spotlight {{ product_name }}</h1>
+      <h1 id="product_spotlight_title">Item Spotlight</h1>
       <div class="product_spotlight_container">
-        <h1>{{ product_name }}</h1>
+        <h1>{{ product.name }}</h1>
         <div class="product_image_container_prime">
-          <img src="#" alt="">
-        </div>
+          <img src="{{product.image.url}}" alt="Product Image">
+        <!-- </div>
         <div class="product_spotlight_image">
           <img src="#" alt="">
         </div>
@@ -41,20 +41,20 @@
         </div>
         <div class="product_spotlight_image">
           <img src="#" alt="">
-        </div>
+        </div> -->
       </div>
       <div class="product_description">
-        <h3>Item Description{{ product_description }}</h3>
-        <p id="product_description_display">Here goes the description {{product_description}}</p>
+        <h3>{{ product.name }}</h3>
+        <p id="product_description_display">{{product.description}}</p>
       </div>
       <div id="buy_this_product">
         <form class="product_price_selection_form" action="#" method="post">
           {% csrf_token %}
           <select class="price_select_dropdown" name="">
-            <option value="">{{ product_price_1 }}</option>
-            <option value="">{{ product_price_2 }}</option>
-            <option value="">{{ product_price_3 }}</option>
-            <option value="">{{ product_price_4 }}</option>
+            <option value="">{{ product.price}}</option>
+            <!-- <option value="">{{ product.price }}</option>
+            <option value="">{{ product.price }}</option>
+            <option value="">{{ product.price }}</option> -->
           </select>
           <button type="submit" name="Buy">Buy</button>
         </form>
@@ -63,15 +63,19 @@
         <h3>Similar Products</h2>
           <div id="product_gallery">
             {% for product in products %}
-            <a href="/product_spotlight/{{product.id}}">
-              <div class="product_gallery_item">
-                <div class="product_image_holder">
-                    <img class="product-image" class="w3-hover-sepia" src="{%static 'comics/images/{{product.image}}'%}" alt="{{product.name}} comic picture">
-                </div>
-                <p class="product_price">Price{{product.price}}</p>
-                <p class="product_name">Name{{product.name}}</p>
+            <div class="product_gallery_item">
+              <a href="/product_spotlight/{{product.id}}">
+              <div class="product_image_holder">
+                  <img class="product-image" class="w3-hover-sepia" src="{{product.image.url}}" alt="{{product.name}} comic picture">
               </div>
-            </a>
+              <p class="product_price">{{product.price}}</p>
+              <p class="product_name">{{product.name}}</p>
+              </a>
+              <form class="" action="#" method="post">
+                <button class="cart_add" type="submit" name="add_to_cart">Add to Cart</button>
+              </form>
+              <!-- <p id="add_to_cart_button">Add to Cart</p> -->
+            </div>
             {% endfor %}
           </div>
           <!-- <div id="product_gallery">
@@ -88,7 +92,6 @@
             {% endfor %}
           </div> -->
       </div>
-      {% include 'includes/footer.html' %}
     </div>
 
     <!-- __Cart View -->
@@ -109,7 +112,7 @@
             <tr>
               <td>Product Name{{ product.name }}</td>
               <td>Product Price{{ product.price }}</td>
-              <td>Quantity{{ product_selected_quantity }}</td>
+              <td>Quantity{{ product.quantity }}</td>
               <td>Cost{{ total_cost }}</td>
             </tr>
             {% endfor %}

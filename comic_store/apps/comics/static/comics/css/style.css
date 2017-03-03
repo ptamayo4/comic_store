@@ -1,6 +1,6 @@
 *{
   margin: 0px auto;
-  /*outline: 1px dotted red;*/
+  outline: 1px dotted red;
   font-family: sans-serif;
   /*background-image: image("temp_blue_background_web.png");*/
   color: white;
@@ -150,7 +150,7 @@ height: 60px;
 #products_console_2{
   display: inline-block;
   vertical-align: top;
-  width: 74%;
+  width: 37%;
   height: 700px;
   margin: 30px 0px 7px 10px;
   padding: 10px 10px 10px 10px;
@@ -220,7 +220,7 @@ select{
   vertical-align: top;
   width: 150px;
   height: 270px;
-  margin: 10px 0px 0px 0px;
+  margin: 35px 0px 0px 10px;
   padding: 0px 0px 0px 0px;
   /*box-shadow: 10px 10px 5px #888888;*/
   font-weight: bold;
@@ -251,14 +251,18 @@ select{
 
 .product_price{
   position: relative;
-  top: 0px;
-  left: 93px;
+
+
 }
 
 .product_name{
+  font-size: small;
   position: relative;
-  top: 0px;
-  left: 93px;
+}
+
+#add_to_cart_form > button{
+  border: none;
+  background-image: linear-gradient(to right, orange, transparent);
 }
 
 #add_to_cart_button{
@@ -286,7 +290,7 @@ option{
 }
 
 .pagination{
-  margin-top: 30px;
+  margin-top: 50px;
 }
 
 #temp_logo{
