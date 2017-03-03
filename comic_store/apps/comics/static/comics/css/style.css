@@ -1,6 +1,6 @@
 *{
   margin: 0px auto;
-  outline: 1px dotted red;
+  /*outline: 1px dotted red;*/
   font-family: sans-serif;
   /*background-image: image("temp_blue_background_web.png");*/
   color: white;
@@ -673,10 +673,77 @@ option{
   font-size:20px;
   text-decoration: none;
 }
+#log_reg-con{
+  position:fixed;
+  background:rgba(0, 0, 0,0.9);
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  z-index:999;
+}
+#log_reg-con form{
+  text-align: center;
+}
+#log_reg-con div{
+  width: 40%;
+    padding: 50px;
+      margin-top:15%;
+      border: 1px solid rgb(255, 255, 255);
+    border-radius: 10px;
+}
+#log_reg-con input{
+  width:100%;
+  display:block;
+  margin:20px 0;
+  font-size:25px;
+  background:transparent;
+  border:0;
+  font-weight: 300;
+  text-align: center;
+}
+#log_reg-con input[type='submit']{
+  font-size: 17px;
+  cursor:pointer;
+}
+#log_reg-con input[type='submit']:hover{
+  color:green;
+}
 /********************/
 /* *** END HOME *** */
 /*******************/
-
+#register-con{
+  background:black;
+  width: 100%;
+  height:100%;
+}
+#register-con form{
+  width:42%;
+  padding: 50px;
+  text-align: center;
+}
+#register-con input{
+  width:100%;
+  display:block;
+  margin:20px 0;
+  font-size:18px;
+  background:transparent;
+  border:0;
+  font-weight: 300;
+  text-align: center;
+}
+#register-con input[type='submit']{
+  font-size: 14px;
+  cursor:pointer;
+}
+#register-con input[type='submit']:hover{
+  color:green;
+}
+#register-con select{
+  width:100%;
+  font-size: 18px;
+  text-align: center;
+}
 /*********************/
 /* *** CARD PAGE *** */
 /*********************/

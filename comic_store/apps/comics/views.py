@@ -108,7 +108,7 @@ def index(request):
     #price1 = product1.price
     #price2 = product2.price
     #print total_price
-    #Order.orderManager.create(s_fname='Test', s_lname='Tester', user=None, 
+    #Order.orderManager.create(s_fname='Test', s_lname='Tester', user=None,
 
     # User.userManager.create(email='usertwo@usertwo.com',password='12345678',first_name='usertwo',last_name='lastname')
     # user = User.userManager.get(email='usertwo@usertwo.com')
@@ -284,10 +284,10 @@ def user_registration(request):
         if 'errors' in user:
             for error in user['errors']:
                 messages.error(request, error)
-            return redirect('/shopping_cart')
+            return redirect('/')
         if 'the_user' in user:
             messages.success(request, "Successfully registered")
-            return redirect('/shopping_cart')
+            return redirect('/')
 
 def user_login(request):
     if request.method == 'POST':
@@ -401,8 +401,13 @@ def charge_process(request,order_id):
 
         sale = Sale()
         sale.charge(total_amount,request.POST['number'],request.POST['exp_month'],request.POST['exp_year'],request.POST['cvc'])
-        return redirect('/')
+        return redirect('/order/success')
 
 # ===================== #
 # === END OF STRIPE === #
 # ===================== #
+
+def order_success(request):
+    return render(request,'comics/success.html')
+def register_me(request):
+    return render(request,'comics/reg.html')
