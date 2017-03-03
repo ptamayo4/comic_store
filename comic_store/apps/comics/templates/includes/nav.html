@@ -22,16 +22,17 @@
           <th>Item</th>
           <th>Price</th>
           <th>Quantity</th>
-          <th>Total</th>
         </thead>
-        {% for item in shopping_cart_items %}
+        {% for order in orders %}
           <tr>
-            <td>Product Name{{ product.name }}</td>
-            <td>Product Price{{ product.price }}</td>
-            <td>Quantity{{ product.quantity }}</td>
-            <td>Cost{{ total_cost }}</td>
+            <td>Product Name{{ order.name }}</td>
+            <td>Product Price{{ order.price }}</td>
+            <td>Quantity{{ order.quantity }}</td>
           </tr>
           {% endfor %}
+          <tr>
+              <td colspan="3">Cost #</td>
+            </tr>
       </table>
       <div id="shopping_cart_link">
       <a href="/shopping_cart"><p id="check_out_click">Click for Checkout</p></a>

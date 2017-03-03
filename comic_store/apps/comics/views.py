@@ -205,6 +205,7 @@ def orders_view(request):
         return redirect('/')
 
 def products_main(request):
+    user = User.userManager.get(id=request.session['user_id'])
     if 'cart' not in request.session:
         request.session['cart'] = []
 
@@ -223,7 +224,8 @@ def products_main(request):
 
     context={
         "products" : products,
-        "categories" : Category.objects.annotate(sum_prod=Count('product_category')).filter(sum_prod__gt=0)
+        "categories" : Category.objects.annotate(sum_prod=Count('product_category')).filter(sum_prod__gt=0),
+        'orders' : Order.objects.filter(user=user),
     }
 
     return render(request, 'comics/products_main.html', context)
@@ -305,7 +307,7 @@ def product_spotlight(request, product_id):
     category_id = product.category_id
     context = {
         "the_product": product,
-        "prod_total": request.session['product_total']
+        "prod_total": request.session['product_total'],
         "products": Product.productManager.filter(category__id= category_id)
     }
     return render(request, 'comics/product_spotlight.html', context)
@@ -387,7 +389,7 @@ def user_registration(request):
 def user_login(request):
     if request.method == 'POST':
         # get order id somehow
-        existing_user = User.userManager.validate_login(request.POST)
+        existing_user = User.userManager.user_login(request.POST)
         if 'error' in existing_user:
             messages.error(request, existing_user['error'])
             return redirect('/')
