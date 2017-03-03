@@ -8,6 +8,7 @@ from django.core.files.storage import FileSystemStorage
 from forms import SalePaymentForm
 from django.views.decorators.csrf import csrf_exempt
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.db.models import Q, Count
 import re
 NO_LET_REGEX = re.compile(r'^-?[0-9]+$')
 def add_test(request):
@@ -108,7 +109,7 @@ def index(request):
     #price1 = product1.price
     #price2 = product2.price
     #print total_price
-    #Order.orderManager.create(s_fname='Test', s_lname='Tester', user=None, 
+    #Order.orderManager.create(s_fname='Test', s_lname='Tester', user=None,
 
     # User.userManager.create(email='usertwo@usertwo.com',password='12345678',first_name='usertwo',last_name='lastname')
     # user = User.userManager.get(email='usertwo@usertwo.com')
@@ -207,10 +208,37 @@ def products_main(request):
 
     context={
         "products" : products,
-        "categories" : Category.objects.all()
+        "categories" : Category.objects.all(),
+        "comics" : Category.objects.annotate(num_comics= Count('product_category'))
     }
 
     return render(request, 'comics/products_main.html', context)
+
+def search_comics(request):
+    if request.method == 'POST':
+        # if request.POST['product_name'] == Product.productManager.filter(name_contains= request.POST['name']):
+        products = Product.productManager.filter(name__contains= request.POST['name'])
+        context = {
+            "products" : products,
+            "categories" : Category.objects.all(),
+        }
+        return render(request,'comics/products_main.html', context)
+
+# def sort_comics(request):
+#     if request.method == 'POST':
+#         if request.POST['product_selection_drop_down'] == "Price":
+#             products = Product.productManager.all().order_by('price')
+#             context = {
+#                 "products" : products,
+#                 "categories" : Category.objects.all(),
+#             }
+#         if request.POST['product_selection_drop_down'] == "Category":
+#             products = Product.productManager.order_by('category')
+#             context = {
+#                 "products" : products,
+#                 "categories" : Category.objects.all(),
+#             }
+#         return render(request,'/products_main.html', context)
 
 def product_category(request,category_id):
 
@@ -235,9 +263,11 @@ def product_category(request,category_id):
     return render(request,'comics/prod_category.html', context)
 
 def product_spotlight(request, product_id):
+    product = Product.productManager.get(id=product_id)
+    category_id = product.category_id
     context = {
-        "product": Product.productManager.get(id=product_id),
-        "products": Product.productManager.all()
+        "product": product,
+        "products": Product.productManager.filter(category__id= category_id)
     }
     return render(request, 'comics/product_spotlight.html', context)
 

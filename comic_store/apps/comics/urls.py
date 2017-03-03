@@ -17,6 +17,8 @@ urlpatterns = [
     url(r'admin_logout$', views.admin_logout),
     url(r'user_update$', views.user_update),
     url(r'^products_main$', views.products_main),
+    url(r'^search_comics$', views.search_comics),
+    # url(r'^sort_comics$', views.sort_comics),
     url(r'^product/category/(?P<category_id>\d+)$',views.product_category),
     #url(r'^product_spotlight/$', views.product_spotlight),
     url(r'^product_spotlight/(?P<product_id>\d+)$', views.product_spotlight),
