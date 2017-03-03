@@ -13,6 +13,23 @@
 <!-- __Information Form -->
       <h1 id="shopping_cart_title">Shopping Cart Portal</h1>
       <div id="checkout_information_form">
+        <form id="checkout_form" action="index.html" method="post">
+          {% csrf_token %}
+          <div id="form_part_1">
+            <h3 id="shipping_information">Shipping Information</h3>
+            <p>First Name:</p>
+            <input type="text" name="" value="" placeholder="First Name">
+            <p>Last Name:</p>
+            <input type="text" name="" value="" placeholder="Last Name">
+            <p>Address:</p>
+            <input type="text" name="" value="" placeholder="Address">
+            <p>City:</p>
+            <input type="text" name="" value="" placeholder="City">
+            <p>State:</p>
+            <input type="text" name="" value="" placeholder="State">
+          </div>
+        </form>
+      </div>
     <div id="shopping_cart_container">
       <table id="shopping_cart_display">
         <thead>

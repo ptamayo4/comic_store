@@ -7,6 +7,7 @@ from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 from forms import SalePaymentForm
 from django.views.decorators.csrf import csrf_exempt
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import re
 NO_LET_REGEX = re.compile(r'^-?[0-9]+$')
 def add_test(request):
@@ -158,7 +159,9 @@ def product_view(request):
     # prodOfCat = Category.objects.filter(products__name="2001")
     # for product in prodOfCat:
     #     print product.name
-    return render(request, 'comics/admin_products.html', context)
+
+    return render(request, 'products_main.html', context)
+
 
 def orders_view(request):
     return render(request, 'comics/admin_orders.html')
@@ -166,22 +169,54 @@ def orders_view(request):
 def products_main(request):
     if 'cart' not in request.session:
         request.session['cart'] = []
-    context = {
-        'products' : Product.productManager.all(),
-        'categories' : Category.objects.all(),
-     }
+
+    products_list = Product.productManager.all()
+    paginator = Paginator(products_list, 8) # Show 8 products per page
+
+    page = request.GET.get('page')
+    try:
+        products = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        products = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        products = paginator.page(paginator.num_pages)
+
+    context={
+        "products" : products,
+        "categories" : Category.objects.all()
+    }
+
     return render(request, 'comics/products_main.html', context)
 
 def product_category(request,category_id):
+
+    products_list = Product.productManager.all()
+    paginator = Paginator(products_list, 8) # Show 8 products per page
+
+    page = request.GET.get('page')
+    try:
+        products = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        products = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        products = paginator.page(paginator.num_pages)
+
     context = {
-        'products' : Product.productManager.filter(product_categories__id= category_id)
+        'products' : Product.productManager.filter(category__id= category_id),
+        'categories': Category.objects.all()
     }
+
     return render(request,'comics/prod_category.html', context)
 
 def product_spotlight(request, product_id):
     context = {
-            'the_product': Product.productManager.get(id=product_id)
-            }
+        "product": Product.productManager.get(id=product_id),
+        "products": Product.productManager.all()
+    }
     return render(request, 'comics/product_spotlight.html', context)
 
 def shopping_cart(request):

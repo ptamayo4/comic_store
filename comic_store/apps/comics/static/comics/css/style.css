@@ -26,16 +26,24 @@
 #nav{
 background-image: linear-gradient(to right, red, transparent)
 }
+
 #nav > h1{
   color:white;
   display:inline-block;
   margin:10px 0px 10px 30px;
   font-size:30px;
 }
-#nav > a{
+
+#shopping_cart_nav{
   float:right;
   color:white;
-  margin:15px 0;
+  margin:15px 0 15px 30px;
+}
+
+#index_link{
+  height: 50px;
+  width: auto;
+  margin: 0px 0px 0px 25px;
 }
 
 /****************************/
@@ -131,7 +139,7 @@ height: 60px;
 
 #products_console_1{
   display: inline-block;
-  width: 300px;
+  width: 20%;
   height: 300px;
   margin: 30px 0px 7px 30px;
   padding: 10px 0px 0px 10px;
@@ -142,7 +150,7 @@ height: 60px;
 #products_console_2{
   display: inline-block;
   vertical-align: top;
-  width: 1300px;
+  width: 37%;
   height: 700px;
   margin: 30px 0px 7px 10px;
   padding: 10px 10px 10px 10px;
@@ -212,7 +220,7 @@ select{
   vertical-align: top;
   width: 150px;
   height: 270px;
-  margin: 10px 0px 0px 0px;
+  margin: 35px 0px 0px 10px;
   padding: 0px 0px 0px 0px;
   /*box-shadow: 10px 10px 5px #888888;*/
   font-weight: bold;
@@ -243,14 +251,24 @@ select{
 
 .product_price{
   position: relative;
-  top: 0px;
-  left: 93px;
+
+
 }
 
 .product_name{
+  font-size: small;
   position: relative;
-  top: 0px;
-  left: 93px;
+}
+
+#add_to_cart_form > button{
+  border: none;
+  background-image: linear-gradient(to right, orange, transparent);
+}
+
+#add_to_cart_button{
+  margin-top: 2px;
+  padding:1px;
+  background-image: linear-gradient(to right, goldenrod, transparent);
 }
 
 button{
@@ -272,7 +290,7 @@ option{
 }
 
 .pagination{
-  margin-top: 30px;
+  margin-top: 50px;
 }
 
 #temp_logo{
@@ -467,7 +485,7 @@ option{
   width: 800px;
   height: 552px;
   margin: 30px 0px 7px 0px;
-  padding: 10px 10px 10px 10px;
+  padding: 10px 0px 10px 10px;
   font-weight: bold;
   border-left: 2px solid white;
   border-bottom: 1px dotted white;
@@ -534,7 +552,7 @@ option{
 
 #my_cart{
   position: relative;
-  left: 601px;
+  left: 18%;
   border: 1px solid white;
   height: 500px;
   width: 700px;
@@ -556,7 +574,7 @@ option{
 
 #display_cart_button{
   position: relative;
-  left: 1600px;
+  left: 75%;
 }
 
 #check_out_click{
