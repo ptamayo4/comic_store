@@ -8,6 +8,7 @@ from django.core.files.storage import FileSystemStorage
 from forms import SalePaymentForm
 from django.views.decorators.csrf import csrf_exempt
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.db.models import Q, Count
 import re
 NO_LET_REGEX = re.compile(r'^-?[0-9]+$')
 def add_test(request):
@@ -50,12 +51,73 @@ def test(request):
     return render(request,'comics/test.html', context)
 
 def index(request):
+
     if 'shopping_cart' not in request.session:
         request.session['shopping_cart'] = []
     if 'product_total' not in request.session:
         request.session['product_total'] = 0
     if 'user_id' not in request.session:
         request.session['user_id'] = 'null'
+
+    ##################################################################
+    # commented so it doesnt keep making new prods for every refresh #
+    ##################################################################
+
+    # Product.productManager.create(
+    # name        =   "Superman",
+    # description =   "Some dork in a cape",
+    # image       =   "guardians1.jpg",
+    # price       =   6.20,
+    # category    =   "Superhero",
+    # quantity    =   42
+    # )
+    # create product
+    #print the_product
+    # User.userManager.create(
+    # email       =   "brian@gmail.com",
+    # password    =   "12345678",
+    # first_name  =   "Brian",
+    # last_name   =   "Sung",
+    # admin_auth  =   True
+    # )
+    # User.userManager.create(
+    # email       =   "james@gmail.com",
+    # password    =   "12345678",
+    # first_name  =   "James",
+    # last_name   =   "Sanders",
+    # admin_auth  =   True
+    # )
+    # User.userManager.create(
+    # email       =   "kerub@gmail.com",
+    # password    =   "12345678",
+    # first_name  =   "kerub",
+    # last_name   =   "Q",
+    # admin_auth  =   True
+    # )
+
+    # Category.objects.create(
+    #     name = 'SciFi'
+    # )
+    # Category.objects.create(
+    #     name = 'Western'
+    # )
+    # Category.objects.create(
+    #     name = 'Samurai'
+    # )
+    #the_category = Category.objects.create(name='Horror')
+    #Product.productManager.create(name='Dope Shit', description='The shit description', image=None, price=900, quantity=300, category=the_category)
+    #product1 = Product.productManager.get(id=31)
+    #product2 = Product.productManager.get(id=32)
+    #request.session['product_ids'].append(product1)
+    #request.session['product_ids'].append(product2)
+    #price1 = product1.price
+    #price2 = product2.price
+    #print total_price
+    #Order.orderManager.create(s_fname='Test', s_lname='Tester', user=None,
+
+    # User.userManager.create(email='usertwo@usertwo.com',password='12345678',first_name='usertwo',last_name='lastname')
+    # user = User.userManager.get(email='usertwo@usertwo.com')
+    # Order.orderManager.create(user=user,s_fname='twouser',s_lname='thelastname',total=30000,status=1)
     context = {
         "products":Product.productManager.all()
     }
@@ -144,10 +206,11 @@ def products_main(request):
 
     context={
         "products" : products,
-        "categories" : Category.objects.all()
+        "categories" : Category.objects.annotate(sum_prod=Count('product_category')).filter(sum_prod__gt=0)
     }
 
     return render(request, 'comics/products_main.html', context)
+
 
 def add_cart(request, product_id):
     if request.method == 'POST':
@@ -171,6 +234,33 @@ def add_cart(request, product_id):
         print request.session['shopping_cart']
         return redirect('/product_spotlight/'+str(product_id))
 
+def search_comics(request):
+    if request.method == 'POST':
+        # if request.POST['product_name'] == Product.productManager.filter(name_contains= request.POST['name']):
+        products = Product.productManager.filter(name__contains= request.POST['name'])
+        context = {
+            "products" : products,
+            "categories" : Category.objects.all(),
+        }
+        return render(request,'comics/products_main.html', context)
+
+# def sort_comics(request):
+#     if request.method == 'POST':
+#         if request.POST['product_selection_drop_down'] == "Price":
+#             products = Product.productManager.all().order_by('price')
+#             context = {
+#                 "products" : products,
+#                 "categories" : Category.objects.all(),
+#             }
+#         if request.POST['product_selection_drop_down'] == "Category":
+#             products = Product.productManager.order_by('category')
+#             context = {
+#                 "products" : products,
+#                 "categories" : Category.objects.all(),
+#             }
+#         return render(request,'/products_main.html', context)
+
+
 def product_category(request,category_id):
 
     products_list = Product.productManager.all()
@@ -188,16 +278,18 @@ def product_category(request,category_id):
 
     context = {
         'products' : Product.productManager.filter(category__id= category_id),
-        'categories': Category.objects.all()
+        'categories': Category.objects.annotate(sum_prod=Count('product_category')).exclude(sum_prod__lt=1)
     }
 
     return render(request,'comics/prod_category.html', context)
 
 def product_spotlight(request, product_id):
+    product = Product.productManager.get(id=product_id)
+    category_id = product.category_id
     context = {
-        "the_product": Product.productManager.get(id=product_id),
-        "products": Product.productManager.all(),
+        "the_product": product,
         "prod_total": request.session['product_total']
+        "products": Product.productManager.filter(category__id= category_id)
     }
     return render(request, 'comics/product_spotlight.html', context)
 
@@ -256,11 +348,10 @@ def user_registration(request):
         if 'errors' in user:
             for error in user['errors']:
                 messages.error(request, error)
-            return redirect('/shopping_cart')
-            #return redirect('/index')
+            return redirect('/register/me')
         if 'the_user' in user:
             messages.success(request, "Successfully registered")
-            return redirect('/shopping_cart')
+            return redirect('/')
 
 def user_login(request):
     if request.method == 'POST':
@@ -268,12 +359,10 @@ def user_login(request):
         existing_user = User.userManager.validate_login(request.POST)
         if 'error' in existing_user:
             messages.error(request, existing_user['error'])
-            #return redirect('/shopping_cart')
-            return redirect('/shopping_cart')
+            return redirect('/')
         if 'logged_in_user' in existing_user:
-            the_order = Order.orderManager.create_order
-            messages.success(request, existing_user['logged_in_user'].first_name+', enter your credit card information to complete your order!')
-            return redirect('/charge')
+            request.session['user_id'] = existing_user.id
+            return redirect('/')
 
 
 def display_test(request):
@@ -375,8 +464,13 @@ def charge_process(request,order_id):
 
         sale = Sale()
         sale.charge(total_amount,request.POST['number'],request.POST['exp_month'],request.POST['exp_year'],request.POST['cvc'])
-        return redirect('/')
+        return redirect('/order/success')
 
 # ===================== #
 # === END OF STRIPE === #
 # ===================== #
+
+def order_success(request):
+    return render(request,'comics/success.html')
+def register_me(request):
+    return render(request,'comics/reg.html')

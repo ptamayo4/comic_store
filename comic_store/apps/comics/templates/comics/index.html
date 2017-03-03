@@ -5,9 +5,38 @@
         <title></title>
         {% load staticfiles %}
         <link rel="stylesheet" type="text/css" href="{%static 'comics/css/style.css'%}">
+        <script
+  src="https://code.jquery.com/jquery-3.1.1.min.js"
+  integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+  crossorigin="anonymous"></script>
+  <script>
+  $(document).ready(function(){
+    $('#log-me').click(function(){
+      $('#log_reg-con').hide();
+    })
+  });
+  </script>
     </head>
     <body id="bg" style="background-image: url('{% static '/comics/images/backgrounds/temp_admin_background_red.jpg' %}')";>
-
+      {%if request.session.user_id == 'null'%}
+        <div id="log_reg-con">
+          <div>
+            {%if messages%}
+              {%for message in messages%}
+                <p class="{{message.tags}}">{{message}}</p>
+              {%endfor%}
+            {%endif%}
+            <form action='/user_login' method='post'>
+              <h2>Memebership Required</h2>
+              {% csrf_token %}
+              <input type="text" name="login_email" placeholder="Email Address">
+              <input type="text" name="login_pw" placeholder="Password">
+              <input type="submit" value="Login" id="log-me"><br>
+              <a href="/register/me">Not a member?</a>
+            </form>
+          </div>
+        </div>
+      {%endif%}
 <!-- __Slide Show -->
       <div class="slideshow-container">
 
@@ -109,31 +138,41 @@
       }
       </script>
       <div id="home-ban">
+        <a href="/products_main"><img id="temp_title_image" src="{% static 'comics/images/logo_stuff/byfn_comics_crop.png' %}" alt="BYFN comics"></a>
         <h1>Buy your</h1>
-        <p>f**** comics here!</p>
+        <p>f****** comics here!</p>
       </div>
       <div class="home">
+        <a href="/product/category/2">
         <div class="category" id="cat1">
           <div>
             <h1>ScyFi</h1>
             <p>View ScyFi Comics</p>
           </div>
         </div>
+        </a>
+        <a href="/product/category/6">
         <div class="category" id="cat2">
           <div>
             <h1>Fantasy</h1>
             <p>View Fantasy Comics</p>
           </div>
         </div>
+        </a>
+        <a href="/product/category/7">
         <div class="category" id="cat3">
           <div>
             <h1>Horror</h1>
             <p>View Horror Comics</p>
           </div>
         </div>
+        </a>
       </div>
       <div id="bottom-ban">
         <a href="/products_main">View More</a>
       </div>
+      <!-- <div id="title_container">
+        <img id="temp_title_image" src="{% static 'comics/images/logo_stuff/byfn_comics_crop.png' %}" alt="BYFN comics">
+      </div> -->
     </body>
 </html>
