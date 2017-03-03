@@ -100,17 +100,7 @@ class UserManager(models.Manager):
 
 class OrderManager(models.Manager):
     def create_order(self, post_data, product_ids):
-        # create user based on billing information
         product_total = 0
-        #u_fname = post_data['u_fname']
-        #u_lname = post_data['u_lname']
-        #u_addr_street = post_data['u_addr_street']
-        #u_street_two = post_data['u_street_two']
-        #u_addr_city = post_data['u_addr_city']
-        #u_addr_state = post_data['u_addr_state']
-        #u_addr_zip = post_data['u_addr_zip']
-        #user_location = Location.objects.create(addr_street=u_addr_street, street_two=u_street_two, addr_city=u_addr_city, addr_state=u_addr_state, addr_zip=u_addr_zip)
-        #the_user = User.userManager.create(first_name=u_fname, last_name=u_lname, user_location=user_location)
         # shipping information
         s_fname = post_data['s_fname']
         s_lname = post_data['s_lname']
@@ -192,14 +182,6 @@ class ProductManager(models.Manager):
             old_category = Category.objects.get(name=edit_category)
             Product.productManager.filter(id=product_id).update(name=new_name, description=new_desc, price=new_price, quantity=new_quantity, category=old_category)
 
-
-# class OrderManager(models.Manager):
-#    def create_order(self, post_data, user_id):
-#        the_user = User.objects.get(id=user_id)
-#
-#    def add_to_order(self, post_data, user_id):
-
-
 class User(models.Model):
     email       =   models.CharField(max_length=100, default=None)
     password    =   models.CharField(max_length=100, default=None)
@@ -219,7 +201,8 @@ class Product(models.Model):
     name        =   models.CharField(max_length=60)
     description =   models.TextField(max_length=1000)
     image       =   models.ImageField(upload_to = 'pic_folder/', default = 'pic_folder/None/no-img.jpg')
-    price       =   models.DecimalField(max_digits=5,decimal_places=2)
+    #price       =   models.DecimalField(max_digits=5,decimal_places=2)
+    price       =   models.IntegerField(default=0)
     quantity    =   models.IntegerField(default=0)
     created_at  =   models.DateTimeField(auto_now_add=True)
     updated_at  =   models.DateTimeField(auto_now=True)
@@ -231,7 +214,7 @@ class Order(models.Model):
     user        =   models.ForeignKey(User, related_name="user_orders")
     s_fname     =   models.CharField(max_length=60, default=None)
     s_lname     =   models.CharField(max_length=60, default=None)
-    total       =   models.IntegerField()
+    total       =   models.IntegerField(default=0)
     status      =   models.IntegerField(default=0)
     created_at  =   models.DateTimeField(auto_now_add=True)
     updated_at  =   models.DateTimeField(auto_now=True)
