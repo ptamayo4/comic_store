@@ -109,6 +109,10 @@ def index(request):
     #price2 = product2.price
     #print total_price
     #Order.orderManager.create(s_fname='Test', s_lname='Tester', user=None, 
+
+    # User.userManager.create(email='usertwo@usertwo.com',password='12345678',first_name='usertwo',last_name='lastname')
+    # user = User.userManager.get(email='usertwo@usertwo.com')
+    # Order.orderManager.create(user=user,s_fname='twouser',s_lname='thelastname',total=30000,status=1)
     context = {
         "products":Product.productManager.all()
     }
@@ -155,9 +159,9 @@ def register(request):
         # addr_zip    =   request.POST['addr_zip']
         )
     return redirect('/admin')
+
 ####ADMIN PRODUCTS#######
 def product_view(request):
-<<<<<<< HEAD
     if 'auth' in request.session:
         product_list = Product.productManager.all()
         paginator = Paginator(product_list, 5)
@@ -177,19 +181,6 @@ def product_view(request):
         return render(request, 'comics/admin_products.html', context)
     else:
         return redirect('/')
-=======
-    context = {
-    "products":Product.productManager.all(),
-    "categories": Category.objects.all()
-    }
-    # print context['categories'][1].name
-    # prodOfCat = Category.objects.filter(products__name="2001")
-    # for product in prodOfCat:
-    #     print product.name
-
-    return render(request, 'products_main.html', context)
-
->>>>>>> 085764dc11b777bbbfe6e127ed931075664b296e
 
 def orders_view(request):
     context = {
@@ -271,7 +262,7 @@ def product_adder(request):
             return redirect('/dashboard/products')
     return redirect('/dashboard/products')
 
-<<<<<<< HEAD
+
 def admin_users(request):
     context = {
     "users": User.userManager.all()
@@ -284,7 +275,6 @@ def user_update(request):
     #         print item['value']
     return redirect('/dashboard/users')
 
-=======
 def display_login_registration(request):
     return render(request, 'comics/login_register.html')
 
@@ -310,7 +300,7 @@ def user_login(request):
             the_order = Order.orderManager.create_order
             messages.success(request, existing_user['logged_in_user'].first_name+', enter your credit card information to complete your order!')
             return redirect('/charge')
->>>>>>> 085764dc11b777bbbfe6e127ed931075664b296e
+
 
 def display_test(request):
     # stop creating the the best product
@@ -355,8 +345,13 @@ def product_update(request, product_id):
 # ============== #
 @csrf_exempt
 def charge(request,order_id):
+    order = Order.orderManager.get(id=order_id)
+    if 'total' not in request.session:
+        request.session['total'] = 'null'
+    request.session['total'] = order.id
+    print order.total
     context = {
-        'order_id' : order_id
+        'orders' : Order.orderManager.filter(id=order_id)
     }
     # if 'total' not in request.session:
     #     request.session['total'] = 300
@@ -398,8 +393,14 @@ def charge_process(request,order_id):
         #         messages.error(request,error)
         #     return redirect('/charge/' + str(order_id))
         # if 'validated_card' in card:
+
+        order = Order.orderManager.get(id=order_id)
+        total_amount = order.total
+
+        #total_amount = request.session['total']
+
         sale = Sale()
-        sale.charge(99999999,request.POST['number'],request.POST['exp_month'],request.POST['exp_year'],request.POST['cvc'])
+        sale.charge(total_amount,request.POST['number'],request.POST['exp_month'],request.POST['exp_year'],request.POST['cvc'])
         return redirect('/')
 
 # ===================== #

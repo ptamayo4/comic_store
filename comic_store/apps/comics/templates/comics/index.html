@@ -12,69 +12,69 @@
       <div class="slideshow-container">
 
       <div class="mySlides fade">
-        <div class="numbertext">1 / 10</div>
+        <!-- <div class="numbertext">1 / 10</div> -->
         <img src="{% static 'comics/images/slideshow_images/slideshow_marvel_1.jpg' %}" style="width:100%">
-        <div class="text">Caption Text</div>
+        <!-- <div class="text">Caption Text</div> -->
       </div>
 
       <div class="mySlides fade">
-        <div class="numbertext">2 / 10</div>
+        <!-- <div class="numbertext">2 / 10</div> -->
         <img src="{% static 'comics/images/slideshow_images/slideshow_dc_1.jpg' %}" style="width:100%">
-        <div class="text">Caption Two</div>
+        <!-- <div class="text">Caption Two</div> -->
       </div>
 
       <div class="mySlides fade">
-        <div class="numbertext">3 / 10</div>
+        <!-- <div class="numbertext">3 / 10</div> -->
         <img src="{% static 'comics/images/slideshow_images/slideshow_marvel_2.jpg' %}" style="width:100%">
-        <div class="text">Caption Text</div>
+        <!-- <div class="text">Caption Text</div> -->
       </div>
 
       <div class="mySlides fade">
-        <div class="numbertext">4 / 10</div>
+        <!-- <div class="numbertext">4 / 10</div> -->
         <img src="{% static 'comics/images/slideshow_images/slideshow_dc_2.jpg' %}" style="width:100%">
-        <div class="text">Caption Two</div>
+        <!-- <div class="text">Caption Two</div> -->
       </div>
 
       <div class="mySlides fade">
-        <div class="numbertext">5 / 10</div>
+        <!-- <div class="numbertext">5 / 10</div> -->
         <img src="{% static 'comics/images/slideshow_images/slideshow_marvel_3.jpg' %}" style="width:100%">
-        <div class="text">Caption Text</div>
+        <!-- <div class="text">Caption Text</div> -->
       </div>
 
       <div class="mySlides fade">
-        <div class="numbertext">6 / 10</div>
+        <!-- <div class="numbertext">6 / 10</div> -->
         <img src="{% static 'comics/images/slideshow_images/slideshow_dc_3.jpg' %}" style="width:100%">
-        <div class="text">Caption Two</div>
+        <!-- <div class="text">Caption Two</div> -->
       </div>
 
       <div class="mySlides fade">
-        <div class="numbertext">5 / 10</div>
+        <!-- <div class="numbertext">5 / 10</div> -->
         <img src="{% static 'comics/images/slideshow_images/slideshow_marvel_4.jpg' %}" style="width:100%">
-        <div class="text">Caption Text</div>
+        <!-- <div class="text">Caption Text</div> -->
       </div>
 
       <div class="mySlides fade">
-        <div class="numbertext">6 / 10</div>
+        <!-- <div class="numbertext">6 / 10</div> -->
         <img src="{% static 'comics/images/slideshow_images/slideshow_dc_4.jpg' %}" style="width:100%">
-        <div class="text">Caption Two</div>
+        <!-- <div class="text">Caption Two</div> -->
       </div>
 
       <div class="mySlides fade">
-        <div class="numbertext">7 / 10</div>
+        <!-- <div class="numbertext">7 / 10</div> -->
         <img src="{% static 'comics/images/slideshow_images/slideshow_marvel_5.jpg' %}" style="width:100%">
-        <div class="text">Caption Text</div>
+        <!-- <div class="text">Caption Text</div> -->
       </div>
 
       <div class="mySlides fade">
-        <div class="numbertext">8 / 10</div>
+        <!-- <div class="numbertext">8 / 10</div> -->
         <img src="{% static 'comics/images/slideshow_images/slideshow_dc_5.jpg' %}" style="width:100%">
-        <div class="text">Caption Two</div>
+        <!-- <div class="text">Caption Two</div> -->
       </div>
 
       </div>
       <br>
 
-      <div style="text-align:center">
+      <div style="text-align:center;display:none">
         <span class="dot"></span>
         <span class="dot"></span>
         <span class="dot"></span>
@@ -108,5 +108,32 @@
           setTimeout(showSlides, 2500); // Change image every 2 seconds
       }
       </script>
+      <div id="home-ban">
+        <h1>Buy your</h1>
+        <p>f**** comics here!</p>
+      </div>
+      <div class="home">
+        <div class="category" id="cat1">
+          <div>
+            <h1>ScyFi</h1>
+            <p>View ScyFi Comics</p>
+          </div>
+        </div>
+        <div class="category" id="cat2">
+          <div>
+            <h1>Fantasy</h1>
+            <p>View Fantasy Comics</p>
+          </div>
+        </div>
+        <div class="category" id="cat3">
+          <div>
+            <h1>Horror</h1>
+            <p>View Horror Comics</p>
+          </div>
+        </div>
+      </div>
+      <div id="bottom-ban">
+        <a href="/products_main">View More</a>
+      </div>
     </body>
 </html>
