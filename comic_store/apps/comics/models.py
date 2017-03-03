@@ -231,7 +231,7 @@ class Order(models.Model):
     user        =   models.ForeignKey(User, related_name="user_orders")
     s_fname     =   models.CharField(max_length=60, default=None)
     s_lname     =   models.CharField(max_length=60, default=None)
-    total       =   models.DecimalField(max_digits=5,decimal_places=2, default=0.00)
+    total       =   models.IntegerField()
     status      =   models.IntegerField(default=0)
     created_at  =   models.DateTimeField(auto_now_add=True)
     updated_at  =   models.DateTimeField(auto_now=True)
